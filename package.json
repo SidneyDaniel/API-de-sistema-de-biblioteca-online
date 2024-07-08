@@ -1,0 +1,22 @@
+{
+  "name": "litterisinventum",
+  "version": "1.0.0",
+  "description": "Biblioteca Virtal",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "node arquives/server/initServer.js",
+    "build": "tsc"
+  },
+  "author": "Sidney D.",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2",
+    "express-session": "^1.17.3",
+    "firebase": "^10.3.0",
+    "firebase-admin": "^12.1.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.5.3"
+  }
+}
