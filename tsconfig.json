@@ -5,10 +5,41 @@
         "moduleResolution": "NodeNext",
         "outDir": "./dist/js",
         "sourceMap": true,
+        "noImplicitAny": true,
         "noEmitOnError": true,
-        "experimentalDecorators": true
+        "experimentalDecorators": true,
+        "strictFunctionTypes": true,
+        "noImplicitThis": true,
+        "resolveJsonModule": true,
+        "alwaysStrict": true,
+        "removeComments": true,
+        "noImplicitReturns": true,
+        "esModuleInterop": true,
+        "allowSyntheticDefaultImports": true,
+        "strict": true,
+        "paths": {
+            "@src/*": [
+                "./src/*"
+            ],
+            "@modules/*": [
+                "./src/app/modules/*"
+            ],
+            "@test/*": [
+                "./test/*"
+            ]
+        },
+        "rootDirs": [
+            "./src",
+            "./test"
+        ],
+        "baseUrl": ".",
     },
     "include": [
-        "./src/**/*"
+        "./src/**/*.ts",
+        "./test/**/*.ts"
+    ],
+    "exclude": [
+        "./node_modules/*",
+        "dist"
     ]
 }
