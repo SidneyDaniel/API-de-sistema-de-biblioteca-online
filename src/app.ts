@@ -4,7 +4,7 @@ import path from 'path';
 import bodyParser from 'body-parser';
 import { Server } from 'http'
 
-import  { router }  from './routes/routes';
+import router from './routes/routes';
 
 export class SetupAplication {
   private server?: Server
@@ -38,7 +38,7 @@ export class SetupAplication {
   }
 
   private setupPathToArquives(): void{
-    this.app.use(express.static(path.join('\\litterisinventum')))
+    this.app.use(express.static(path.join('\\API de sistema de biblioteca online')))
   }
 
   public start(): void {

@@ -1,15 +1,6 @@
-const admin = require('firebase-admin');
-const { sign } = require('crypto');
+import admin from 'firebase-admin';
+// import { sign } from 'crypto';
 
-// admin.initializeApp({
-//     credential: admin.credential.cert({
-//       projectId: process.env.PROJECT_ID,
-//       clientEmail: '',
-//       privateKey: ''
-//     }),
-//     databaseURL: ''
-     
-// });
 
 admin.initializeApp({
     credential: admin.credential.cert({
@@ -22,10 +13,12 @@ admin.initializeApp({
   
 
 
-const { getFirestore, Timestamp, FieldValue, Filter } = require('firebase-admin/firestore');
+import { getFirestore } from 'firebase-admin/firestore';
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const db = getFirestore();
 
-module.exports = {
-  db
-}
+// module.exports = {
+//   db
+// }
+
+export default db
