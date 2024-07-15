@@ -1,14 +1,9 @@
+import express from 'express';
+const router = express.Router();
+import AccesCodesController from '@src/controllers/controler-acessCodes';
 
-// import express from 'express';
-// const router = express.Router();
-// import { Request, Response } from 'express';
-// import admin from 'firebase-admin';
+const getClassCodes = new AccesCodesController;
 
-// router.post('/salasParticipadas', (req: Request, res: Response) => {
-//     const { accessCode } = req.body;
+router.post('/salasParticipadas', getClassCodes.getClassCode)
 
-    
-    
-// })
-
-// export default router;
+export default router;

@@ -1,5 +1,7 @@
 import admin from 'firebase-admin';
 // import { sign } from 'crypto';
+import dotenv from 'dotenv'; 
+dotenv.config()
 
 
 admin.initializeApp({

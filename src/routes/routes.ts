@@ -3,27 +3,27 @@ export const router = express.Router();
 
 //> SESSION
 import sign__In from '../routes/routes-session/Sign_In';
-// const sign__Out = require('../routes/session/Sign_Out.js')
+import sign__Out from '../routes/routes-session/Sign_Out';
 // const sign__Up  = require('../routes/session/Sign_Up.js')
 
 // const verifiy__Session = require('../routes/session/VerifiySession.js')
 // // const getUidFrom__Session = require('../routes/session/getUidFromSession.js')
 
 // //>ACESS-CODE
-// const getAcessCode = require('../routes/AcessCode/getAcessCode.js')
-// const getClassCode = require('../routes/AcessCode/getClassCods.js') 
-// const getSavedCode = require('../routes/AcessCode/getSavedCode.js')
+import getAcessCode from '../routes/routes-accesCode/get-AccesCode';
+import getClassCode from '../routes/routes-accesCode/get-ClassCode'; 
+import getSavedCode from '../routes/routes-accesCode/get-SavedCode';
 
 // //Admin FireStoreRoutes 
 // // > CRUD
-// const createBook = require('../routes/AdminFireStoreRoutes/CRUD/createBook.js')
-// const readBook   = require('../routes/AdminFireStoreRoutes/CRUD/readBook.js')
-// const removeBook = require('../routes/AdminFireStoreRoutes/CRUD/removeBook.js')
-// const updateBook = require('../routes/AdminFireStoreRoutes/CRUD/updateBook.js')
+import createBook from '../routes/routes-adminFireStore/CRUD/create-Book';
+import readBook from '../routes/routes-adminFireStore/CRUD/read-Book';
+import removeBook from '../routes/routes-adminFireStore/CRUD/remove-Book';
+import updateBook from '../routes/routes-adminFireStore/CRUD/update-Book';
 
 // // *Registered Books
-// const checkLastBook   = require('../routes/AdminFireStoreRoutes/checkLastRegisteredBook.js')
-// const registeredBooks = require('../routes/AdminFireStoreRoutes/registeredBooks.js')
+import checkLastBook from '../routes/routes-adminFireStore/check-lastRegisteredBook';
+import registeredBooks from '../routes/routes-adminFireStore/registered-Books';
 
 // // > FavBooks
 // const addFavBook    = require('../routes/FavBooks/addFavBook.js')
@@ -35,32 +35,32 @@ import sign__In from '../routes/routes-session/Sign_In';
 // const delUser       = require('../routes/UserRoutes/DeleteUser.js')
 // const editUser      = require('../routes/UserRoutes/EditUserData.js')
 // const editAdminUser = require('../routes/UserRoutes/EditUserDataAdmin.js')
-// const listAllUser   = require('../routes/UserRoutes/ListAllUsers.js')
-// const userData      = require('../routes/UserRoutes/UserData.js')
+import listAllUser from '../routes/routes-user/list-AllUsers';
+import userData from '../routes/routes-user/user-Data';
 
 
 router.use('/', 
     sign__In,
-    // sign__Out,
+    sign__Out,
     // sign__Up,
     // verifiy__Session,
-    // getAcessCode,
-    // getClassCode,
-    // getSavedCode,
-    // createBook,
-    // readBook,
-    // removeBook,
-    // updateBook,
-    // checkLastBook,
-    // registeredBooks,
+    getAcessCode,
+    getClassCode,
+    getSavedCode,
+    createBook,
+    readBook,
+    removeBook,
+    updateBook,
+    checkLastBook,
+    registeredBooks,
     // addFavBook,
     // getFavBook,
     // removeFavBook,
     // delUser,
     // editUser,
     // editAdminUser,
-    // listAllUser,
-    // userData 
+    listAllUser,
+    userData 
 );
 
 
