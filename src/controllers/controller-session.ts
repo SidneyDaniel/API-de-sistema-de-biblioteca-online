@@ -100,7 +100,7 @@ class SessionController {
 
     async signUpAdm(req: Request, res: Response){
       const { displayName, email, password } = req.body;
-      console.log(email, displayName);
+      console.log(email, displayName, password);
       // Criar um usuário com o Firebase Admin SDK
       admin.auth().createUser({
           displayName,

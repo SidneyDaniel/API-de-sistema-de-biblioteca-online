@@ -4,7 +4,7 @@ export const router = express.Router();
 //> SESSION
 import sign__In from '../routes/routes-session/Sign_In';
 import sign__Out from '../routes/routes-session/Sign_Out';
-// const sign__Up  = require('../routes/session/Sign_Up.js')
+import sign__Up from '../routes/routes-session/Sign_Up';
 
 // const verifiy__Session = require('../routes/session/VerifiySession.js')
 // // const getUidFrom__Session = require('../routes/session/getUidFromSession.js')
@@ -26,15 +26,15 @@ import checkLastBook from '../routes/routes-adminFireStore/check-lastRegisteredB
 import registeredBooks from '../routes/routes-adminFireStore/registered-Books';
 
 // // > FavBooks
-// const addFavBook    = require('../routes/FavBooks/addFavBook.js')
-// const getFavBook    = require('../routes/FavBooks/getFavBook.js')
-// const removeFavBook = require('../routes/FavBooks/removeFavBook.js')
+import addFavBook from '../routes/routes-favBooks/add-FavBook';
+import getFavBook from '../routes/routes-favBooks/get-FavBook';
+import removeFavBook from '../routes/routes-favBooks/remove-FavBook';
 
 
 // // >UserRouter
-// const delUser       = require('../routes/UserRoutes/DeleteUser.js')
-// const editUser      = require('../routes/UserRoutes/EditUserData.js')
-// const editAdminUser = require('../routes/UserRoutes/EditUserDataAdmin.js')
+import delUser from '../routes/routes-user/delete-User';
+import editUser from '../routes/routes-user/edit-UserData';
+import editAdminUser from '../routes/routes-user/edit-UserDataAdmin';
 import listAllUser from '../routes/routes-user/list-AllUsers';
 import userData from '../routes/routes-user/user-Data';
 
@@ -42,7 +42,7 @@ import userData from '../routes/routes-user/user-Data';
 router.use('/', 
     sign__In,
     sign__Out,
-    // sign__Up,
+    sign__Up,
     // verifiy__Session,
     getAcessCode,
     getClassCode,
@@ -53,12 +53,12 @@ router.use('/',
     updateBook,
     checkLastBook,
     registeredBooks,
-    // addFavBook,
-    // getFavBook,
-    // removeFavBook,
-    // delUser,
-    // editUser,
-    // editAdminUser,
+    addFavBook,
+    getFavBook,
+    removeFavBook,
+    delUser,
+    editUser,
+    editAdminUser,
     listAllUser,
     userData 
 );
