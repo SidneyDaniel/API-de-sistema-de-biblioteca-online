@@ -1,12 +1,15 @@
 import admin from 'firebase-admin';
 import db from "@src/database/fireStore-config"
 import { getUIDFromSession } from '@src/services/getUid-service';
+import UserSession from '@src/services/getUid-service';
 import { Response, Request } from 'express';
 
 class AccesCodesController {
     async getAccesCode(req: Request, res: Response){
-        getUIDFromSession(req).then(async (uid: string) => { 
-          const adminAccesCode = db.collection('administradores').doc(uid).collection('livrosAdm').doc('accessCode');          
+        const userSession = new UserSession(req);
+
+        userSession.getUserInfo().then(async (userInfo) => { 
+          const adminAccesCode = db.collection('administradores').doc(userInfo.uid).collection('livrosAdm').doc('accessCode');          
           const doc = await adminAccesCode.get();
           if (doc.exists) {
             const code = doc.data();
