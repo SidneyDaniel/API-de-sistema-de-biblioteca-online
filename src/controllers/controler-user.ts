@@ -60,7 +60,6 @@ class UserController {
           const user = listUsersResult.users.find(user => user.displayName === currentName);
           console.log(user?.uid);
 
-          //Deletar usuário Cadastrado
           admin.auth().updateUser(user?.uid || '', {
             displayName: newUserName,
             email: newUserEmail
@@ -124,7 +123,6 @@ class UserController {
     // res.json(userName)
 
     const listAllUsers = async (nextPageToken?: string) => {
-      // List batch of users, 1000 at a time.
       await admin.auth()
         .listUsers(1000, nextPageToken)
         .then((listUsersResult) => {
@@ -133,7 +131,6 @@ class UserController {
 
           console.log(user?.uid);
 
-          //Deletar usuário Cadastrado
           admin.auth()
             .deleteUser(user?.uid || '')
             .then(() => {

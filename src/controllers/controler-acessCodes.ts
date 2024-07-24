@@ -1,6 +1,7 @@
-import admin from 'firebase-admin';
+// import admin from 'firebase-admin';
 import db from "@src/database/fireStore-config"
 import { getUIDFromSession } from '@src/services/getUid-service';
+import DocumentProcessor from '@src/services/processDocument-service';
 import UserSession from '@src/services/getUid-service';
 import { Response, Request } from 'express';
 
@@ -30,38 +31,19 @@ class AccesCodesController {
             console.log(accessCode);
             console.log(docNameId);
 
-            // ======================
             getUIDFromSession(req).then(async (uid: string) => { 
               const adminAccesCode = db.collection('usuarios').doc(uid).collection('turmas').doc('turma');
 
               const doc = await adminAccesCode.get();
 
-              function docLenght(params: admin.firestore.DocumentSnapshot<admin.firestore.DocumentData, admin.firestore.DocumentData>) {
-                  if (params.exists) {
-                      const data = doc.data() as {email?: string, nome?: string, codigoTurma?: string  };
+              const processorLenght = new DocumentProcessor(doc)
 
-                      delete data.email;
-                      delete data.nome;
-
-                      const numFields = Object.keys(data.codigoTurma || {}).length + 1;
-                      console.log(`O documento contém ${numFields} campos.`);
-
-                      return numFields;
-                  } else {
-                      console.log('Nenhum documento encontrado');
-                      return 0;
-                  }
-              }
-
-              const lenght = ` codigoTurma.${docLenght(doc)}`
-              console.log(docLenght(doc));
-              // Aqui estamos definindo alguns dados de exemplo para adicionar ao documento
+              const lenght = ` codigoTurma.${processorLenght.getLength()}`
+              console.log(processorLenght);
               const data = {
                   [lenght.trim()]: docNameId
-                  // adicione mais campos conforme necessário
               };
 
-              // Use o método set() para adicionar um novo documento
               await adminAccesCode.update(data);
               // await adminAccesCode.set(data, { merge: true });
 
@@ -83,25 +65,9 @@ class AccesCodesController {
 
       const doc = await adminAccesCodeUser.get();
 
-      function fieldsValues(params: admin.firestore.DocumentSnapshot<admin.firestore.DocumentData, admin.firestore.DocumentData>) {
-        if (params.exists) {
-          const data = doc.data() as { email?: string, nome?: string, codigoTurma?: string };
+      const processorField = new DocumentProcessor(doc);
 
-          delete data.email;
-          delete data.nome;
-
-          const fields = Object.values(data.codigoTurma || {})
-
-          return fields;
-        } else {
-          console.log('Nenhum documento encontrado');
-          return [];
-        }
-      }
-
-
-      const roomCodes = fieldsValues(doc)
-
+      const roomCodes = processorField.getFields();
       console.log(roomCodes);
 
       const allDocs = roomCodes.map((docName: string) => {
@@ -118,7 +84,7 @@ class AccesCodesController {
       });
 
       Promise.all(allDocs).then((results) => {
-        console.log(results); // Imprime os dados de todos os documentos recuperados
+        console.log(results); 
         res.json(results);
       });
     }).catch(error => {
@@ -141,7 +107,6 @@ async function findAllCollectionAndAccessCode(): Promise<object[]> {
   const allCodes: Array<collectionItem> = [];
   const collectionRef = db.collectionGroup('livrosAdm');
 
-  // Retorne a promessa para que você possa esperar por ela mais tarde
   try {
     const querySnapshot = await collectionRef.get();
     querySnapshot.forEach(doc => {
