@@ -3,7 +3,7 @@
         "target": "ESNext",
         "module": "CommonJS",
         "moduleResolution": "node",
-        "outDir": "./dist/js",
+        "outDir": "./server/dist/js",
         "sourceMap": true,
         "noImplicitAny": true,
         "noEmitOnError": true,
@@ -19,24 +19,24 @@
         "strict": true,
         "paths": {
             "@src/*": [
-                "./src/*"
+                "./server/src/*"
             ],
             "@modules/*": [
-                "./src/app/modules/*"
+                "./server/src/app/modules/*"
             ],
             "@test/*": [
-                "./test/*"
+                "./server/test/*"
             ]
         },
         "rootDirs": [
-            "./src",
-            "./test"
+            "./server/src",
+            "./server/test"
         ],
         "baseUrl": ".",
     },
     "include": [
-        "./src/**/*.ts",
-        "./test/**/*.ts"
+        "./server/src/**/*.ts",
+        "./server/test/**/*.ts"
     ],
     "exclude": [
         "./node_modules/*",
