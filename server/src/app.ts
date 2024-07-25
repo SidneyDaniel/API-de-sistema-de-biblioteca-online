@@ -43,8 +43,12 @@ export class SetupAplication {
 
   private setupPathToArquives(): void{
     // this.app.use(express.static(path.join('\\API de sistema de biblioteca online')))
-    const rootPath = path.join(__dirname, '..'); 
+    const rootPath = path.join(__dirname, '../../client/dashboard-administracao/dist'); 
     this.app.use(express.static(rootPath));
+
+    this.app.get('/', (req, res) => {
+      res.sendFile(path.join(rootPath, 'index.html'));
+  });
   }
   
   // private setupAdminFirebase():void {
