@@ -1,5 +1,6 @@
 import db from "@src/database/fireStore-config";
 import { Request, Response } from "express";
+import UserSession from "@src/services/getUid-service";
 import admin from 'firebase-admin';
 
 interface Livro {
@@ -18,45 +19,71 @@ class FavBooks{
         bookInfo.forEach((book: Livro) => {
           console.log(book.name);
         
-          const cookieHeader = req.headers.cookie || '';
-          const cookies = cookieHeader.split(';').map(cookie => cookie.trim());
-          const sessionCookie = cookies.find(cookie => cookie.startsWith('session='));
-          const sessionValue = sessionCookie ? sessionCookie.split('=')[1] : '';
-    
-          admin.auth()
-            .verifySessionCookie(sessionValue, true)
-            .then((decodedClaims) => {
-              admin.auth().getUserByEmail(decodedClaims?.email || '')
-              .then(async (userRecord) => {
-                const favoriteBooks = db.collection('usuarios').doc(userRecord.uid).collection('livrosFavoritos');
+          const userSession = new UserSession(req);
+
+          userSession.getUserInfo().then(async (userInfo) => {
+            const favoriteBooks = db.collection('usuarios').doc(userInfo.uid).collection('livrosFavoritos');
                 
-                favoriteBooks.add({
-                  bookName: book.name,
-                  bookAuthor: book.author,
-                  bookPublisher: book.publisher,
-                  numberOfPages: book.pages,
-                  readLink: book.readLink,
-                  bookCover: book.cover,
-                  bookDataCreation: admin.firestore.FieldValue.serverTimestamp()
-                })
-                .then((docRef) => {
-                  console.log("Document written with ID: ", docRef.id);
-                  res.status(200).json({ message: "Document written with ID: " + docRef.id });
-                })
-                .catch((error) => {
-                    console.error("Error adding document: ", error);
-                    res.status(500).json({ message: "Error adding document: " + error });
-                });
-                
-                console.log('Documento adicionado com sucesso!');
-              })
-              .catch(error => {
-                console.error('Erro ao recuperar as informações do usuário:', error);
-              });
+            favoriteBooks.add({
+              bookName: book.name,
+              bookAuthor: book.author,
+              bookPublisher: book.publisher,
+              numberOfPages: book.pages,
+              readLink: book.readLink,
+              bookCover: book.cover,
+              bookDataCreation: admin.firestore.FieldValue.serverTimestamp()
+            })
+            .then((docRef) => {
+              console.log("Document written with ID: ", docRef.id);
+              res.status(200).json({ message: "Document written with ID: " + docRef.id });
             })
             .catch((error) => {
-              console.log(error);
+                console.error("Error adding document: ", error);
+                res.status(500).json({ message: "Error adding document: " + error });
             });
+            
+            console.log('Documento adicionado com sucesso!');
+          })
+
+          // const cookieHeader = req.headers.cookie || '';
+          // const cookies = cookieHeader.split(';').map(cookie => cookie.trim());
+          // const sessionCookie = cookies.find(cookie => cookie.startsWith('session='));
+          // const sessionValue = sessionCookie ? sessionCookie.split('=')[1] : '';
+    
+          // admin.auth()
+          //   .verifySessionCookie(sessionValue, true)
+          //   .then((decodedClaims) => {
+          //     admin.auth().getUserByEmail(decodedClaims?.email || '')
+          //     .then(async (userRecord) => {
+          //       const favoriteBooks = db.collection('usuarios').doc(userRecord.uid).collection('livrosFavoritos');
+                
+          //       favoriteBooks.add({
+          //         bookName: book.name,
+          //         bookAuthor: book.author,
+          //         bookPublisher: book.publisher,
+          //         numberOfPages: book.pages,
+          //         readLink: book.readLink,
+          //         bookCover: book.cover,
+          //         bookDataCreation: admin.firestore.FieldValue.serverTimestamp()
+          //       })
+          //       .then((docRef) => {
+          //         console.log("Document written with ID: ", docRef.id);
+          //         res.status(200).json({ message: "Document written with ID: " + docRef.id });
+          //       })
+          //       .catch((error) => {
+          //           console.error("Error adding document: ", error);
+          //           res.status(500).json({ message: "Error adding document: " + error });
+          //       });
+                
+          //       console.log('Documento adicionado com sucesso!');
+          //     })
+          //     .catch(error => {
+          //       console.error('Erro ao recuperar as informações do usuário:', error);
+          //     });
+          //   })
+          //   .catch((error) => {
+          //     console.log(error);
+          //   });
         //========================
         }); 
     
