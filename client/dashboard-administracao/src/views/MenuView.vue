@@ -37,19 +37,19 @@ const items = [
                             label: 'Search',
                             icon: 'pi pi-search',
                             shortcut: '⌘+S',
-                            path: '/about'
+                            path: '/search'
                         },
                         {
                             label: 'Users',
                             icon: 'pi pi-user-edit',
                             shortcut: '⌘+S',
-                            path: ''
+                            path: '/users'
                         },
                         {
                             label: 'Books',
                             icon: 'pi pi-book',
                             shortcut: '⌘+S',
-                            path: ''
+                            path: '/books'
                         }
                     ]
                 },
@@ -60,7 +60,7 @@ const items = [
                             label: 'Settings',
                             icon: 'pi pi-cog',
                             shortcut: '⌘+O',
-                            path: ''
+                            path: '/settings'
                         },
                         {
                             label: 'Logout',
