@@ -1,10 +1,14 @@
 <script setup lang="ts">
 import { RouterLink, RouterView } from 'vue-router'
 import MenuView from './views/MenuView.vue'
+import LoginView from './views/LoginView.vue';
+import { useAuthStore } from './stores/auth';
+
+const authStore = useAuthStore();
 </script>
 
 <template>
-  <main class="min-h-screen">
+  <main class="min-h-screen" v-if="authStore.isAuthenticated">
     <header>
         <nav>
           <MenuView/>
@@ -15,6 +19,8 @@ import MenuView from './views/MenuView.vue'
       <RouterView />
     </div>
   </main>
+  <LoginView v-else/>
+
 
 </template>
 

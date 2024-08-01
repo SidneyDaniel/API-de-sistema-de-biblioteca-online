@@ -53,12 +53,13 @@ export default {
               body: JSON.stringify({ idToken })
 
             })
-              .then(response => {
+              .then(async response => {
                 const url = response.url
                 alert("Login feito com sucesso!!!!😁😀")
-                useAuthStore().setAuthToken();
+                await useAuthStore().setAuthToken();
                 // window.location.href = url;
-                this.$router.replace('home')
+                this.$router.push('/');
+                // window.location.href = response.url;
                 console.log(url);
               })
               .catch(error => console.error(error));
