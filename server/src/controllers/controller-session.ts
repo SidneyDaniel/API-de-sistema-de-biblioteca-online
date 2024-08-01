@@ -1,6 +1,7 @@
 import admin from 'firebase-admin';
 import { Response, Request } from 'express';
 import crypto from 'crypto';
+import UserSession from '@src/services/getUid-service';
 
 
 class SessionController {
@@ -29,7 +30,7 @@ class SessionController {
             .then((sessionCookie) => {
             const options = {maxAge: expiresIn, httpOnly: true, secure: true};
             res.cookie('session', sessionCookie, options);
-            res.redirect('/admnistracao/dashboard/dashboard.html');
+            res.redirect('/');
             }).catch(error => {
             console.error(error);
             res.json({ error: error.message });
@@ -134,6 +135,46 @@ class SessionController {
           
       });
     }
+    
+    async verifySession(req: Request, res: Response){
+      const userSession = new UserSession(req);
+      
+      async function cookieExists(): Promise<boolean> {
+        // const cookies = document.cookie.split(';').map(cookie => cookie.trim());
+        // return cookies.some(cookie => cookie.startsWith('session='));
+        const cookieHeader = req.headers.cookie || '';
+        const cookies = cookieHeader.split(';').map(cookie => cookie.trim());
+        return cookies.some(cookie => cookie.startsWith('session='));
+      }
+
+      const verifyCookie = await cookieExists();
+
+      if (verifyCookie) {  
+        await userSession.getUserInfo().then(async (userInfo) => {
+          admin.auth().getUserByEmail(userInfo.email)
+          .then(userRecord => {
+            // Verificar se o usuário é um administrador
+            console.log(userRecord?.customClaims?.role || '');
+            if (userRecord.customClaims && userRecord.customClaims.role === "admin") {
+              console.log('O usuário é um administrador');
+              // O usuário é um administrador, permitir acesso
+              res.status(200).json('Usuário auteticado');
+            } else {
+              console.log('O usuário não é um administrador');
+              // O usuário não é um administrador, redirecionar para a página de login
+              res.status(403).json('Usuário autenticado mas não é admin');
+            }
+          })
+          .catch(error => {
+            console.error('Erro ao recuperar as informações do usuário:', error);
+          });
+        })
+      }else{
+        console.log('Cookie não encontrado!!!');
+        res.status(401).json('Nem autenticado você está cai fora');
+      }
+    }
+
 
 }
 
