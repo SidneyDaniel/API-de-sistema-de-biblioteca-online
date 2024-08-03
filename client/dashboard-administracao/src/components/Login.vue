@@ -1,9 +1,22 @@
 <template>
-    <div>
-      <input type="email" v-model="email" placeholder="Email">
-      <input type="password" v-model="password" placeholder="Password">
-      <button @click="login">Login</button>
-    </div>
+  <form v-on:submit.prevent="login" class="flex flex-col gap-6 w-96 ">
+    <FloatLabel>
+            <InputText id="username" v-model="email" class="w-full" size="small" />
+            <label for="username">Username</label>
+    </FloatLabel>
+    
+    <FloatLabel class="w-full">
+            <Password v-model="password" :feedback="false" input-class="w-full h-[35px]" class="block w-full"  toggleMask />
+            <label for="password">Password</label>
+    </FloatLabel>
+    <Button type="submit" label="Submit" size="small"/>
+  </form>
+<!-- 
+<div>
+  <input type="email" v-model="email" placeholder="Email">
+  <input type="password" v-model="password" placeholder="Password">
+  <button @click="login">Login</button>
+</div> -->
   </template>
   
 <script lang="ts">
@@ -22,6 +35,10 @@ const firebaseConfig = {
   appId: "1:863313920136:web:5a35c51a3cd02bf4631f3d",
   measurementId: "G-8PP422JWJ9"
 };
+
+import { ref } from 'vue';
+
+const value = ref(null);
 
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);

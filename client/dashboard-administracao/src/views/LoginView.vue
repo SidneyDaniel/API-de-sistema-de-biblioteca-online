@@ -4,8 +4,8 @@ import Login from '../components/Login.vue';
 </script>
 
 <template>
-    <div class="about">
-      <h1>This is an Login page</h1>
+    <div class="h-screen flex flex-col items-center justify-center gap-5">
+      <h1>Login</h1>
       <Login/>
     </div>
   </template>
