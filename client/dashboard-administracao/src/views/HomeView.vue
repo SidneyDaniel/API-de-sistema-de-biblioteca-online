@@ -1,13 +1,21 @@
 <script setup lang="ts">
-import TheWelcome from '../components/TheWelcome.vue'
+import Cards from "@/components/homeView/cards.vue";
+import Charts from "@/components/homeView/charts.vue";
+import Tables from "@/components/homeView/tables.vue";
 </script>
 
+
 <template>
-  <main>
-    <div class="about">
-      <h1>This is an Home page</h1>
+  <header>
+    <h1>This is an Home page</h1>
+  </header>
+  <div class="flex flex-col gap-3">
+    <Charts/>
+    <Cards/>
+    <div>
+      <Tables/>
     </div>
-  </main>
+  </div>
 </template>
 
 <style>
