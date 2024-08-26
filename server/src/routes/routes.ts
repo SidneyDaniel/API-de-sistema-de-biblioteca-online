@@ -6,7 +6,7 @@ import sign__In from '../routes/routes-session/Sign_In';
 import sign__Out from '../routes/routes-session/Sign_Out';
 import sign__Up from '../routes/routes-session/Sign_Up';
 
-// const verifiy__Session = require('../routes/session/VerifiySession.js')
+import verifiy__Session from '../routes/routes-session/verify_session';
 // // const getUidFrom__Session = require('../routes/session/getUidFromSession.js')
 
 // //>ACESS-CODE
@@ -43,7 +43,7 @@ router.use('/',
     sign__In,
     sign__Out,
     sign__Up,
-    // verifiy__Session,
+    verifiy__Session,
     getAcessCode,
     getClassCode,
     getSavedCode,

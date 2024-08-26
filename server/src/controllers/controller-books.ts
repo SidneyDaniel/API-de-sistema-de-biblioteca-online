@@ -10,6 +10,7 @@ interface Livro {
     pages: number;
     cover: string;
     readLink: string;
+    bookDataCreation: Date;
 }
 
 
@@ -27,7 +28,8 @@ class BooksController {
                   publisher: data.bookPublisher,
                   pages: data.numberOfPages,
                   cover: data.bookCover,
-                  readLink: data.readLink
+                  readLink: data.readLink,
+                  bookDataCreation: data.bookDataCreation
               };
       
               ALLBOOKS.push(book);

@@ -7,10 +7,33 @@ class ResgisteredController{
         console.log(date);
         const collectionName = 'tarefas';
         const dateField = 'bookDataCreation';
-        const targetDate = new Date(date);
+        // const targetDate = new Date(date);
 
-        const startOfYear = new Date(targetDate.getFullYear(), 0, 1);
-        const endOfYear = new Date(targetDate.getFullYear(), 11, 31);
+        const queryOldest = db.collection(collectionName)
+        .orderBy(dateField)
+        .limit(1);
+
+        const oldestSnapshot = await queryOldest.get();
+        const oldestBookDate = oldestSnapshot.docs[0]?.get(dateField)?.toDate();
+
+        console.log('Oldest: ', oldestBookDate);
+        
+        
+        const queryRecent = db.collection(collectionName)
+            .orderBy(dateField, 'desc')
+            .limit(1);
+        const recentSnapshot = await queryRecent.get();
+        const recentBookDate = recentSnapshot.docs[0]?.get(dateField)?.toDate();
+
+        console.log('Recent: ', recentBookDate);
+        
+        if (!oldestBookDate || !recentBookDate) {
+            res.status(404).json({ error: 'Nenhum livro encontrado.' });
+            return;
+        }
+
+        const startOfYear = new Date(oldestBookDate.getFullYear(), 0, 1);
+        const endOfYear = new Date(recentBookDate.getFullYear(), 11, 31);
 
         const query = db.collection(collectionName)
             .where(dateField, '>=', startOfYear)
