@@ -26,5 +26,13 @@ export default defineConfig({
     proxy: {
       '/server' : "http://localhost:3000"
     }
-  }
+  },
+  // define: {
+  //   __VUE_PROD_DEVTOOLS__: true
+  // }
 })
+
+//Lembre-se de tirar essa definição 
+// define: {
+//   __VUE_PROD_DEVTOOLS__: true
+// Isso aqui é só pra ativar o vue devtools no modo de produção, deixar ele aqui provavelmente vai dar problema.

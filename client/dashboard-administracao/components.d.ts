@@ -16,6 +16,7 @@ declare module 'vue' {
     Charts: typeof import('./src/components/homeView/charts.vue')['default']
     Column: typeof import('primevue/column')['default']
     DataTable: typeof import('primevue/datatable')['default']
+    DatePicker: typeof import('primevue/datepicker')['default']
     Divider: typeof import('primevue/divider')['default']
     FloatLabel: typeof import('primevue/floatlabel')['default']
     HelloWorld: typeof import('./src/components/HelloWorld.vue')['default']
@@ -29,12 +30,11 @@ declare module 'vue' {
     Password: typeof import('primevue/password')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
-    Table: typeof import('./src/components/homeView/table.vue')['default']
+    Select: typeof import('primevue/select')['default']
     Tables: typeof import('./src/components/homeView/tables.vue')['default']
     Tag: typeof import('primevue/tag')['default']
     TheWelcome: typeof import('./src/components/TheWelcome.vue')['default']
     ToggleButton: typeof import('primevue/togglebutton')['default']
-    UserChart: typeof import('./src/components/homeView/userChart.vue')['default']
     WelcomeItem: typeof import('./src/components/WelcomeItem.vue')['default']
   }
 }
