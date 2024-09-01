@@ -27,12 +27,21 @@ class UserController {
       await admin.auth()
         .listUsers(1000, nextPageToken)
         .then((listUsersResult) => {
+          // console.log(listUsersResult);
+          
           const users = listUsersResult.users.map((user) => ({
+            uid: user.uid,
             displayName: user.displayName,
             email: user.email,
+            emailVerified: user.emailVerified,
+            creationTime: user.metadata.creationTime,
+            lastSignInTime: user.metadata.lastSignInTime,
+            tokensValidAfterTime: user.tokensValidAfterTime,
+            disabled: user.disabled,
           }));
           allUsers = allUsers.concat(users);
-
+          console.log(users);
+          
           if (listUsersResult.pageToken) {
             listAllUsers(listUsersResult.pageToken);
           } else {
