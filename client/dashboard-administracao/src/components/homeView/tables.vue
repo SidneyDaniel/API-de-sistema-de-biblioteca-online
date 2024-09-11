@@ -86,7 +86,11 @@ export default {
                     <span class="text-xl font-bold">Users</span>
                 </div>
             </template>
-            <Column field="name" header="Name" style="width: 25%"></Column>
+            <Column field="name" header="Name" style="width: 25%">
+              <template #body="{ data }">
+                    <span>{{ data.name ? data.name : 'User'  }}</span>
+              </template>
+            </Column>
             <Column field="email" header="Email" style="width: 25%"></Column>
             <Column field="uid" header="Uid°" style="width: 25%">
               <template #body="{ data }">
@@ -103,8 +107,12 @@ export default {
 </template>
 
 <style>
-.p-datatable-column-title {
+/* .p-datatable-column-title {
     color: var(--p-primary-color);
+} */
+
+.p-datatable-header {
+    color: var(--p-primary-color) !important;
 }
 
 .p-datatable {
