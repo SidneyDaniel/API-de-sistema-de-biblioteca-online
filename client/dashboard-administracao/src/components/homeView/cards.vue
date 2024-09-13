@@ -95,7 +95,7 @@ export default {
         BooksLenght,
         UsersLenght,
         MostRecentBook,
-        formatDate
+        formatDate,
     };
   },
 };
@@ -132,21 +132,22 @@ export default {
 
         <Card class="w-full min-w-40 max-w-96 overflow-hidden">
             <template #title>Last Book added</template>
-            <template #subtitle><span>{{ MostRecentBook?.name }}</span><br><span class="text-xs">{{ MostRecentBook?.author }}</span></template>
+            <template #subtitle>Newest Addition to the Collection</template>
             <template #content>
-                <div class="mb-4 flex flex-row justify-between">
-                    <div class="relative">
-                        <Image :src="MostRecentBook?.cover" alt="Image" width="260" />
-                        <Tag :value="formatDate(MostRecentBook?.bookDataCreation)"  severity="secondary" class="absolute" style="left:5px; right: 5px; bottom: 5px;" />
+                <section class="flex flex-col gap-8">
+                    <div class="mb-4 pt-12 flex flex-row justify-between">
+                        <div class="relative m-auto bg-primary p-10 rounded-full h-56 w-56 flex items-end justify-center">
+                            <img alt="book cover" :src="MostRecentBook?.cover" class="w-36 rounded-2xl"/>
+                        </div>
                     </div>
-                    <span class="flex flex-col items-center gap-3">
-                        <Button icon="pi pi-eye" :href="MostRecentBook?.readLink" target="_blank" severity="secondary" outlined />
-                        <Badge :value="MostRecentBook?.pages" size="xlarge" severity="secondary"></Badge>
-                    </span>
-                </div>
-                <div>
-                    <span class="text-xs">Publisher: {{ MostRecentBook?.publisher }}</span>
-                </div>
+                    <div class="flex flex-col gap-2">
+                        <span >Title: {{ MostRecentBook?.name }}</span>
+                        <span class="text-xs">Author: {{ MostRecentBook?.author }}</span>
+                        <span class="text-xs">Pages: {{ MostRecentBook?.pages }}</span>
+                        <span class="text-xs">Publisher: {{ MostRecentBook?.publisher }}</span>    
+                    </div>
+                    <Tag :value="formatDate(MostRecentBook?.bookDataCreation)" class="w-full"></Tag>
+                </section>
             </template>
         </Card>
 
