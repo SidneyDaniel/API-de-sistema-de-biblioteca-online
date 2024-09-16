@@ -29,7 +29,8 @@ class BooksController {
                   pages: data.numberOfPages,
                   cover: data.bookCover,
                   readLink: data.readLink,
-                  bookDataCreation: data.bookDataCreation
+                  bookDataCreation: data.bookDataCreation,
+                  bookUpdateDate: data.bookUpdateDate
               };
       
               ALLBOOKS.push(book);
