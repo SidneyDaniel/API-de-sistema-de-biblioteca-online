@@ -8,6 +8,7 @@ interface Book{
     cover: string;
     readLink: string;
     bookDataCreation: Date;
+    bookUpdateDate: Date;
 }
 
 export const useBooksStore = defineStore('books', {

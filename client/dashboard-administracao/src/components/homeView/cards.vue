@@ -22,6 +22,10 @@ type Book = {
     _seconds: number;
     _nanoseconds: number;
   };
+  bookUpdateDate: {
+    _seconds: number;
+    _nanoseconds: number;
+  };
   cover: string;
   name: string;
   pages: string;
@@ -38,7 +42,8 @@ export default {
 
     const BooksLenght = ref();
     const UsersLenght = ref();
-    let MostRecentBook = ref<Book | null>(null)
+    let MostRecentBook = ref<Book | null>(null);
+    let MostRecentUpdatedBook = ref<Book | null>(null)
 
     const books = computed<Array<Book>>(() => bookStore.books || []);
     const loadingBooks = computed(() => bookStore.loading);
@@ -89,12 +94,23 @@ export default {
         }
     }, { immediate: true });
 
+    watch(books, (newBooksUp) => {
+        if (newBooksUp && newBooksUp.length > 0) {
+        const validBooks = newBooksUp.filter(book => book.bookUpdateDate && book.bookUpdateDate._seconds !== undefined);
+        if (validBooks.length > 0) {
+            MostRecentUpdatedBook.value = validBooks.reduce((latest, book) => {
+                return (latest.bookUpdateDate._seconds > book.bookUpdateDate._seconds) ? latest : book;
+            });
+        }
+    }
+    }, { immediate: true });
 
     return {
         books,
         BooksLenght,
         UsersLenght,
         MostRecentBook,
+        MostRecentUpdatedBook,
         formatDate,
     };
   },
@@ -152,12 +168,23 @@ export default {
         </Card>
 
         <Card class="w-full min-w-40 max-w-96  overflow-hidden">
-            <template #title>Last updated book</template>
-            <template #subtitle>Name of the book</template>
+            <template #title>Last Book Updated</template>
+            <template #subtitle>Most Recently Updated Book</template>
             <template #content>
-                <p class="m-0">
-                    1
-                </p>
+                <section class="flex flex-col gap-8">
+                    <div class="mb-4 pt-12 flex flex-row justify-between">
+                        <div class="relative m-auto bg-primary p-10 rounded-full h-56 w-56 flex items-end justify-center">
+                            <img alt="book cover" :src="MostRecentUpdatedBook?.cover" class="w-36 rounded-2xl"/>
+                        </div>
+                    </div>
+                    <div class="flex flex-col gap-2">
+                        <span >Title: {{ MostRecentUpdatedBook?.name }}</span>
+                        <span class="text-xs">Author: {{ MostRecentUpdatedBook?.author }}</span>
+                        <span class="text-xs">Pages: {{ MostRecentUpdatedBook?.pages }}</span>
+                        <span class="text-xs">Publisher: {{ MostRecentUpdatedBook?.publisher }}</span>    
+                    </div>
+                    <Tag :value="formatDate(MostRecentUpdatedBook?.bookUpdateDate)" class="w-full"></Tag>
+                </section>
             </template>
         </Card>
     </div>
