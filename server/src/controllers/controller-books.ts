@@ -94,7 +94,7 @@ class BooksController {
     }
 
     async editBook(req: Request, res: Response){
-        const { currentTitle, newBookName, newBookauthor, newBookPublisher, newBooksPages } = req.body;
+        const { currentTitle, newBookName, newBookauthor, newBookPublisher, newBooksPages, newReadLink, newBookCover } = req.body;
         console.log(currentTitle);
         db.collection("tarefas").where("bookName", "==", currentTitle).get().then((querySnapshot) => {
           if (!querySnapshot.empty) {
@@ -103,7 +103,9 @@ class BooksController {
                   bookName:      newBookName,
                   bookAuthor:    newBookauthor,
                   bookPublisher: newBookPublisher,
-                  numberOfPages: newBooksPages
+                  numberOfPages: newBooksPages,
+                  readLink: newReadLink,
+                  bookCover: newBookCover
               }).then(() => {
                   console.log("Document successfully updated!");
                   res.json("Document successfully updated! EDITADO, SERVIDOR!")
