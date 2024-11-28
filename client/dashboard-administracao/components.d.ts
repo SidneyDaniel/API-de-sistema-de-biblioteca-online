@@ -20,6 +20,7 @@ declare module 'vue' {
     DatePicker: typeof import('primevue/datepicker')['default']
     Dialog: typeof import('primevue/dialog')['default']
     Divider: typeof import('primevue/divider')['default']
+    DynamicPhotoFrame: typeof import('./src/components/DynamicPhotoFrame.vue')['default']
     FloatLabel: typeof import('primevue/floatlabel')['default']
     HelloWorld: typeof import('./src/components/HelloWorld.vue')['default']
     IconCommunity: typeof import('./src/components/icons/IconCommunity.vue')['default']

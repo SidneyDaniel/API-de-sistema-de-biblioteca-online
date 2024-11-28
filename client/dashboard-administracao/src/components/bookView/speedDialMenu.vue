@@ -2,6 +2,7 @@
 import { useBooksStore } from '@/stores/books';
 import CreateReadUpdateDelete from '@/services/CRUD';
 import toast from 'primevue/toast';
+import { useToastService } from '@/composables/useToastService';
 import { ref } from 'vue';
 const bookStore = useBooksStore();
 
@@ -18,6 +19,8 @@ export default {
         }
     },
     setup(){
+        const toastService = useToastService();
+        const showToast = () => { toastService.add({ severity: 'success', summary: 'Sucesso', detail: 'Mensagem de sucesso exibida!', life: 3000 }); };
         const value = ref()
         const visible = ref(false)
         const isLoading = ref(false)
@@ -44,10 +47,11 @@ export default {
                 }
             },
             {
-                label: 'Upload',
+                label: 'Refresh',
                 icon: 'pi pi-refresh',
                 command: () => {
-                    toast.add({ severity: 'error', summary: 'Delete', detail: 'Data Deleted', life: 3000 });
+                    // toast.add({ severity: 'error', summary: 'Delete', detail: 'Data Deleted', life: 3000 });
+                    toastService.add({ severity: 'success', summary: 'Sucesso', detail: 'Mensagem de sucesso exibida!', life: 3000 });
                 }
             },
         ])
@@ -55,7 +59,8 @@ export default {
             items,
             visible,
             isLoading,
-            value
+            value,
+            showToast
         }
     },
     methods: {
@@ -87,6 +92,7 @@ export default {
                 this.isLoading = false
                 return error
             } finally {
+                this.showToast()
                 this.isLoading = false
                 this.visible = false
             }

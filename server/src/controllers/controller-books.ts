@@ -94,8 +94,8 @@ class BooksController {
     }
 
     async editBook(req: Request, res: Response){
-        const { currentTitle, newBookName, newBookauthor, newBookPublisher, newBooksPages, newReadLink, newBookCover } = req.body;
-        console.log(currentTitle);
+        const { currentTitle, newBookName, newBookauthor, newBookPublisher, newBookPages, newReadLink, newBookCover } = req.body;
+        console.log(currentTitle, newBookName, newBookauthor, newBookPublisher, newBookPages, newReadLink, newBookCover);
         db.collection("tarefas").where("bookName", "==", currentTitle).get().then((querySnapshot) => {
           if (!querySnapshot.empty) {
               const docId = querySnapshot.docs[0].id;
@@ -103,7 +103,7 @@ class BooksController {
                   bookName:      newBookName,
                   bookAuthor:    newBookauthor,
                   bookPublisher: newBookPublisher,
-                  numberOfPages: newBooksPages,
+                  numberOfPages: newBookPages,
                   readLink: newReadLink,
                   bookCover: newBookCover
               }).then(() => {

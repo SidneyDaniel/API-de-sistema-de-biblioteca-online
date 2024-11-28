@@ -1,4 +1,5 @@
 // import { useBooksStore } from '@/stores/books';
+import { coommitBooks } from '@/utils/commitBooks';
 // const bookStore = useBooksStore();
 
 class CreateReadUpdateDelete {
@@ -41,6 +42,11 @@ class CreateReadUpdateDelete {
                     console.log(response.url);
                     alert("Não Autorizado!")
                 } else {
+                    // await bookStore.$reset()
+                    // await bookStore.fetchBooks()
+                    // const a = await bookStore.books
+                    // await bookStore.$patch({books: a })
+                    coommitBooks()
                     console.log("autorizado");
                     // await bookStore.fetchBooks()
                     return response
@@ -78,6 +84,7 @@ class CreateReadUpdateDelete {
                     console.log(response.url);
                     alert("Não Autorizado!")
                 } else {
+                    coommitBooks()
                     console.log("autorizado");
                     return response
                 }
@@ -108,6 +115,7 @@ class CreateReadUpdateDelete {
                     console.log(response.url);
                     alert("Não Autorizado! ")
                 } else {
+                    coommitBooks()
                     console.log("autorizado");
                     return response
                 }
