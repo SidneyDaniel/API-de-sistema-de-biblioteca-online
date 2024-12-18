@@ -3,12 +3,14 @@ import { RouterLink, RouterView } from 'vue-router'
 import MenuView from './views/MenuView.vue'
 import LoginView from './views/LoginView.vue';
 import { useAuthStore } from './stores/auth';
+import Toast from 'primevue/toast';
 
 const authStore = useAuthStore();
 </script>
 
 <template>
   <main class="min-h-screen" v-if="authStore.isAuthenticated">
+    <Toast/>
     <header>
         <nav>
           <MenuView/>

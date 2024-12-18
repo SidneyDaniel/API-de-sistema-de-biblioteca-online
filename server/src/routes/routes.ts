@@ -20,6 +20,7 @@ import createBook from '../routes/routes-adminFireStore/CRUD/create-Book';
 import readBook from '../routes/routes-adminFireStore/CRUD/read-Book';
 import removeBook from '../routes/routes-adminFireStore/CRUD/remove-Book';
 import updateBook from '../routes/routes-adminFireStore/CRUD/update-Book';
+import deleteBookBatch from '../routes/routes-adminFireStore/CRUD/delete-book-batch'
 
 // // *Registered Books
 import checkLastBook from '../routes/routes-adminFireStore/check-lastRegisteredBook';
@@ -51,6 +52,7 @@ router.use('/',
     readBook,
     removeBook,
     updateBook,
+    deleteBookBatch,
     checkLastBook,
     registeredBooks,
     addFavBook,

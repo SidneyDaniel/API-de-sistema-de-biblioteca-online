@@ -94,8 +94,8 @@ class BooksController {
     }
 
     async editBook(req: Request, res: Response){
-        const { currentTitle, newBookName, newBookauthor, newBookPublisher, newBooksPages } = req.body;
-        console.log(currentTitle);
+        const { currentTitle, newBookName, newBookauthor, newBookPublisher, newBookPages, newReadLink, newBookCover } = req.body;
+        console.log(currentTitle, newBookName, newBookauthor, newBookPublisher, newBookPages, newReadLink, newBookCover);
         db.collection("tarefas").where("bookName", "==", currentTitle).get().then((querySnapshot) => {
           if (!querySnapshot.empty) {
               const docId = querySnapshot.docs[0].id;
@@ -103,7 +103,9 @@ class BooksController {
                   bookName:      newBookName,
                   bookAuthor:    newBookauthor,
                   bookPublisher: newBookPublisher,
-                  numberOfPages: newBooksPages
+                  numberOfPages: newBookPages,
+                  readLink: newReadLink,
+                  bookCover: newBookCover
               }).then(() => {
                   console.log("Document successfully updated!");
                   res.json("Document successfully updated! EDITADO, SERVIDOR!")
@@ -119,7 +121,40 @@ class BooksController {
       
     }
 
-    
+    async deleteBooksBatch(req: Request, res: Response){
+        const { bookTitles } = req.body;
+        console.log(bookTitles);
+
+        const deletionPromises = [];
+
+        for (const bookTitle of bookTitles) {
+            try {
+            const querySnapshot = await db.collection("tarefas")
+                .where("bookName", "==", bookTitle)
+                .get();
+
+            if (!querySnapshot.empty) {
+                const docId = querySnapshot.docs[0].id;
+                console.log("Document ID:", docId);
+
+                deletionPromises.push(db.collection("tarefas").doc(docId).delete());
+            } else {
+                console.log("No document found for:", bookTitle);
+            }
+            } catch (error) {
+            console.error("Error searching for document:", error);
+            }
+        }
+
+        try {
+            await Promise.all(deletionPromises);
+            console.log("Documents successfully deleted!");
+            res.json("Documents successfully deleted: RESPOSTA SERVIDOR!");
+        } catch (error) {
+            console.error("Error deleting documents:", error);
+        }
+        
+    }
 
 
 };
