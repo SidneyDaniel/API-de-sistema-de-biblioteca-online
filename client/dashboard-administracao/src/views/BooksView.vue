@@ -164,6 +164,10 @@ export default {
     const loadingBooks = computed(() => bookStore.loading);
     const errorBooks = computed(() => bookStore.error);
       
+    const visibleCheckBox = ref(false);
+
+    const handleVisibleCheckBox = (value: boolean) => { visibleCheckBox.value = value; };
+
     onMounted(async () => {
         await bookStore.fetchBooks();
         console.log(bookStore.loading);
@@ -172,23 +176,40 @@ export default {
     return {
       books,
       loadingBooks,
-      errorBooks
+      errorBooks,
+      handleVisibleCheckBox,
+      visibleCheckBox
     };
   },
+  watch: {
+    visibleCheckBox(newValue, oldValue){
+      console.log('Visible change from ' + oldValue + ' to ' + newValue );
+      
+    }
+  },
+  methods: {
+    ViToTrue(){
+      this.visibleCheckBox = true
+    }, 
+    ViToFalse(){
+      this.visibleCheckBox = false
+    }
+  }
 };
 </script>
 
 <template>
     <header>
       <h1 class="text-primary text-xs">This is an Books page</h1>
+      <h1>{{ visibleCheckBox }}</h1>
     </header>
     <main>
       <div class="flex justify-end w-full my-5">
-        <SearchBar/>
+        <SearchBar :visible-check-box="visibleCheckBox"/>
       </div>
-      <div class="flex flex-row gap-3 overflow-auto flex-wrap h-[89vh]">
-        <CardsBooks v-for="book in books" :key="book.name" :book="book"/>
-        <SpeedDialMenu/>
+      <div class="flex flex-row gap-3 overflow-auto flex-wrap h-[88vh]">
+        <CardsBooks :book="books" :visibleCheckBox="visibleCheckBox" v-on:toFalse="ViToFalse"/>
+        <SpeedDialMenu @visibleCheckBox="handleVisibleCheckBox"/>
       </div>
     </main>
 </template>

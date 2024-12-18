@@ -7,3 +7,12 @@ export const useToastService = () => {
         add: (msg: ToastMessageOptions) => toast.add(msg)
     };
 };
+
+
+
+// type Severity = "success" | "info" | "warn" | "error" | "secondary" | "contrast" | undefined;
+
+// const showToast = (sev: Severity, sum: string, det: string) => { 
+//     const toastService = useToastService();
+//     toastService.add({ severity: sev , summary: sum, detail: det, life: 3000 }); 
+// };

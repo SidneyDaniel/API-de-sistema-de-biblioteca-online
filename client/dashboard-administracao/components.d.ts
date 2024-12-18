@@ -15,6 +15,7 @@ declare module 'vue' {
     CardsBooks: typeof import('./src/components/bookView/cardsBooks.vue')['default']
     Chart: typeof import('primevue/chart')['default']
     Charts: typeof import('./src/components/homeView/charts.vue')['default']
+    Checkbox: typeof import('primevue/checkbox')['default']
     Column: typeof import('primevue/column')['default']
     DataTable: typeof import('primevue/datatable')['default']
     DatePicker: typeof import('primevue/datepicker')['default']

@@ -18,12 +18,15 @@ export default {
             readLink: ''
         }
     },
-    setup(){
+    emits: ['visibleCheckBox']
+    ,
+    setup(_, {emit}){
         const toastService = useToastService();
         const showToast = () => { toastService.add({ severity: 'success', summary: 'Sucesso', detail: 'Mensagem de sucesso exibida!', life: 3000 }); };
         const value = ref()
         const visible = ref(false)
         const isLoading = ref(false)
+        // const emit = defineEmits(['visibleCheckBox'])
         const items = ref([
             {
                 label: 'Add',
@@ -43,7 +46,8 @@ export default {
                 label: 'Delete',
                 icon: 'pi pi-trash',
                 command: () => {
-                    toast.add({ severity: 'error', summary: 'Delete', detail: 'Data Deleted', life: 3000 });
+                    // toast.add({ severity: 'error', summary: 'Delete', detail: 'Data Deleted', life: 3000 });
+                    emit('visibleCheckBox', true)
                 }
             },
             {
@@ -60,7 +64,8 @@ export default {
             visible,
             isLoading,
             value,
-            showToast
+            showToast,
+            toastService
         }
     },
     methods: {
@@ -92,12 +97,14 @@ export default {
                 this.isLoading = false
                 return error
             } finally {
-                this.showToast()
+                // this.showToast()
+                this.toastService.add({ severity: 'success', summary: 'Sucesso', detail: 'Mensagem de sucesso exibida!', life: 3000 });
                 this.isLoading = false
                 this.visible = false
             }
             console.log(this.title);   
-        }
+        },
+        emitDeleteEvent() { this.$emit('visibleCheckBox', true); }
     } 
 };
 </script>
