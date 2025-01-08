@@ -2,6 +2,8 @@
 import { ref, type PropType } from 'vue';
 import { useBooksStore } from '@/stores/books';
 import CreateReadUpdateDelete from '@/services/CRUD';
+import { useToastService } from '@/composables/useToastService';
+
 
 type Book = {
   author: string;
@@ -43,8 +45,10 @@ export default {
         const toggle = (event: any) => {
             op.value.toggle(event);
         }
-                
-        return{ op ,toggle}
+        const toastService = useToastService();
+
+        const visible = ref(false);    
+        return{ op ,toggle, visible, toastService}
     },
     methods: {
         isValidURL(url: string | URL) {
@@ -75,6 +79,8 @@ export default {
                 return error
             }finally {  
                 await bookStore.fetchBooks();
+                this.toastService.add({ severity: 'success', summary: 'Sucesso', detail: 'Book Updated Sucefully!', life: 3000 });
+                this.visible = false
             }
         },
         async deletebook(curTitle: string){
@@ -88,6 +94,8 @@ export default {
                 return error
             }finally {  
                 bookStore.fetchBooks();
+                this.toastService.add({ severity: 'success', summary: 'Sucesso', detail: 'Book Deleted Sucesfully!', life: 3000 });
+                this.visible = false
             }            
         }
         
@@ -99,23 +107,29 @@ export default {
 <template>
     <div class="flex gap-4 mt-1">
         <Button label="Delete" severity="primary" icon="pi pi-trash" size="small" outlined class="w-full" @click="deletebook(dataOfBooks.name)"/>
-        <Button label="Edit" icon="pi pi-pencil" class="w-full" size="small"  @click="toggle" />
+        <Button label="Edit" icon="pi pi-pencil" class="w-full" size="small"  @click="visible = true" />
 
-        <Popover ref="op">
-            <section class="flex flex-col gap-4 items-end w-[35rem]">
-                    <div class="flex flex-row gap-4 w-full">
-                        <div class="flex flex-col gap-3 justify-evenly">
+        <Dialog v-model:visible="visible" modal class="!max-h-fit h-screen overflow-auto" >        
+            <template #header>
+                <div class="inline-flex items-center justify-center gap-1">
+                    <span class="font-bold whitespace-nowrap text-primary text-xl">Edit book</span>
+                </div>
+            </template>
+
+            <section class="flex flex-col gap-4 items-end w-[85vw] max-w-[35rem]">
+                    <div class="flex flex-col gap-4 w-full">
+                        <!-- <div class="flex flex-col gap-3 justify-evenly">
                             <div class="w-fit min-h-full rounded-lg bg-primary-emphasis p-2">
                                 <div v-if="!cover || !isValidURL(cover) " class="flex flex-col justify-around items-center font-extralight w-60 min-h-full bg-primary-contrast rounded-lg">
                                     <h1>Publisher</h1>
                                     <h2>Title</h2>
                                     <h3>Author</h3>
                                 </div>
-                                <!-- <DynamicPhotoFrame  :imageUrl="cover" /> -->
                                 <img v-else  :src="cover" alt="image" class="rounded-lg w-60 min-w-60 contain-size min-h-full" />
                             </div> 
-                        </div>
-
+                        </div> -->
+                        <DynamicPhotoFrame  :imageUrl="cover" />
+    
                         <div class="flex flex-col gap-2 w-full">
                             <div class="flex flex-col gap-2">
                                 <label for="username">Title</label>
@@ -136,7 +150,7 @@ export default {
                                 <label for="username">Pages</label>
                                 <InputText id="username" v-model="pages" aria-describedby="username-help" size="small" :placeholder="dataOfBooks.pages"/>
                             </div>
-
+    
                             <div class="flex flex-col gap-2">
                                 <label for="username">Cover</label>
                                 <InputText id="username" v-model="cover" aria-describedby="username-help" size="small" :placeholder="dataOfBooks.cover"/>
@@ -148,8 +162,8 @@ export default {
                             </div>
                         </div>
                     </div>
-                    <div>
-                        <Button label="Cancel" text severity="secondary" @click="toggle"  autofocus />
+                    <div class="flex gap-2">
+                        <Button label="Cancel" text severity="secondary" @click="visible = false"  autofocus />
                         <Button label="Save" outlined severity="secondary" 
                         @click="updateBook(
                             name || dataOfBooks.name, 
@@ -162,6 +176,6 @@ export default {
                         )"  autofocus />
                     </div>
             </section>
-        </Popover>
+        </Dialog>
     </div>
 </template>

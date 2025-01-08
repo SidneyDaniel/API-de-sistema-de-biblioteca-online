@@ -35,7 +35,7 @@ declare module 'vue' {
     Knob: typeof import('primevue/knob')['default']
     Login: typeof import('./src/components/Login.vue')['default']
     Password: typeof import('primevue/password')['default']
-    Popover: typeof import('primevue/popover')['default']
+    ProgressBar: typeof import('primevue/progressbar')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     SearchBar: typeof import('./src/components/bookView/searchBar.vue')['default']

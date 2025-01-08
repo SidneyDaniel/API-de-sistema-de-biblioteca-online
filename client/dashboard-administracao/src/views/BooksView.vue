@@ -204,9 +204,6 @@ export default {
       <h1>{{ visibleCheckBox }}</h1>
     </header>
     <main>
-      <div class="flex justify-end w-full my-5">
-        <SearchBar :visible-check-box="visibleCheckBox"/>
-      </div>
       <div class="flex flex-row gap-3 overflow-auto flex-wrap h-[88vh]">
         <CardsBooks :book="books" :visibleCheckBox="visibleCheckBox" v-on:toFalse="ViToFalse"/>
         <SpeedDialMenu @visibleCheckBox="handleVisibleCheckBox"/>
