@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import Menu from 'primevue/menu';
-import { PrimeIcons } from '@primevue/core/api';
-import { RouterLink, RouterView } from 'vue-router';
+import { RouterLink, useRouter} from 'vue-router';
 
 import { ref } from 'vue';
 
 const checked = ref(false);
+
+const router = useRouter()
 
 const toggleColorScheme = (): void => {
     const element = document.querySelector('html');
@@ -66,7 +67,21 @@ const items = [
                             label: 'Logout',
                             icon: 'pi pi-sign-out',
                             shortcut: '⌘+Q',
-                            path: ''
+                            path:'/',
+                            command: async () => {
+                              
+                                try {
+                                  const response = await fetch('/sessionLogout', {method: 'POST'})
+                                
+                                  if (!response.ok) { throw new Error('Failed to logOut'); }
+                                } catch (error) {
+                                  console.log(error as Error)
+                                } finally {
+                                  await router.go(0)
+                                  await router.push({path: '/login'}); 
+                                }                    
+                              
+                            }
                         }
                     ]
                 },

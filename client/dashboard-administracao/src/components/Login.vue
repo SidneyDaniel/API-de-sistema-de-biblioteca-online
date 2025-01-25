@@ -78,52 +78,56 @@ export default {
       try {
         this.loading = true
         
-        // const userCredential = await signInWithEmailAndPassword(auth, this.email, this.password)
-        // const user = userCredential.user; 
-        // const idToken = await user.getIdToken(); 
+        const userCredential = await signInWithEmailAndPassword(auth, this.email, this.password)
+        const user = userCredential.user; 
+        const idToken = await user.getIdToken(); 
 
-        // const response = await fetch('/login/adm', { 
-        //   method: 'POST', 
-        //   headers: { 'Content-Type': 'application/json' }, 
-        //   body: JSON.stringify({ idToken })
-        // });
-
-        // const url = response.url; alert("Login feito com sucesso!!!!😁😀"); 
-        // await useAuthStore().setAuthToken(); 
-        // this.$router.push('/'); console.log(url);
-
-        signInWithEmailAndPassword(auth, this.email, this.password)
-        .then((userCredential) => {
-          // Signed in 
-          const user = userCredential.user;
-          user.getIdToken().then(idToken => {
-            fetch('/login/adm', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json'
-              },
-              body: JSON.stringify({ idToken })
-
-            })
-              .then(async response => {
-                const url = response.url
-                alert("Login feito com sucesso!!!!😁😀")
-                await useAuthStore().setAuthToken();
-                // window.location.href = url;
-                this.$router.push('/');
-                // window.location.href = response.url;
-                console.log(url);
-              })
-              .catch(error => console.error(error));
-          });
-        })
-        .catch((error) => {
-          this.loading = false
-          alert(getErrorWrongPassword(error))
-          throw new Error
-          const errorCode = error.code;
-          const errorMessage = error.message;
+        const response = await fetch('/login/adm', { 
+          method: 'POST', 
+          headers: { 'Content-Type': 'application/json' }, 
+          body: JSON.stringify({ idToken })
         });
+
+
+        if (!response.ok) { throw new Error('Failed to login'); }
+
+        alert("Login feito com sucesso!!!!😁😀"); 
+        const url = response.url; 
+        await useAuthStore().setAuthToken(); 
+        this.$router.push('/'); console.log(url);
+
+        // signInWithEmailAndPassword(auth, this.email, this.password)
+        // .then((userCredential) => {
+        //   // Signed in 
+        //   const user = userCredential.user;
+        //   user.getIdToken().then(idToken => {
+        //     fetch('/login/adm', {
+        //       method: 'POST',
+        //       headers: {
+        //         'Content-Type': 'application/json'
+        //       },
+        //       body: JSON.stringify({ idToken })
+
+        //     })
+        //       .then(async response => {
+        //         const url = response.url
+        //         alert("Login feito com sucesso!!!!😁😀")
+        //         await useAuthStore().setAuthToken();
+        //         // window.location.href = url;
+        //         this.$router.push('/');
+        //         // window.location.href = response.url;
+        //         console.log(url);
+        //       })
+        //       .catch(error => console.error(error));
+        //   });
+        // })
+        // .catch((error) => {
+        //   this.loading = false
+        //   alert(getErrorWrongPassword(error))
+        //   throw new Error
+        //   const errorCode = error.code;
+        //   const errorMessage = error.message;
+        // });
       } catch (error) {
         this.toastService.add({ severity: 'error', summary: 'Fail', detail: `${getErrorWrongPassword(error as fireBaseError)}`, life: 3000 });
         // alert(getErrorWrongPassword(error as fireBaseError))
