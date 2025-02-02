@@ -1,44 +1,15 @@
 <script lang="ts">
-import { ref, onMounted, computed, watch } from "vue";
+import { ref, onMounted, computed, watch, defineComponent } from "vue";
 import { useBooksStore } from "@/stores/books";
 import { useUserStore } from "@/stores/usersStore";
-import Tables from "./tables.vue";
-import { useRegisterStore } from "@/stores/registeredBooks";
 
-interface InputUser extends Object {
-    creationTime: Date;
-    disabled: boolean;
-    displayName: string;
-    email: string;
-    emailVerified: boolean;
-    lastSignInTime: Date;
-    tokensValidAfterTime: Date;
-    uid: string;
-}
+import type { Book, InputUser } from "@/types/booksTypes";
 
-type Book = {
-  author: string;
-  bookDataCreation: {
-    _seconds: number;
-    _nanoseconds: number;
-  };
-  bookUpdateDate: {
-    _seconds: number;
-    _nanoseconds: number;
-  };
-  cover: string;
-  name: string;
-  pages: string;
-  publisher: string;
-  readLink: string;
-};
-
-export default {
+export default defineComponent({
   name: "cards",
   setup() {
     const bookStore = useBooksStore();
     const userStore = useUserStore();
-    const registerStore = useRegisterStore();
 
     const BooksLenght = ref();
     const UsersLenght = ref();
@@ -49,42 +20,16 @@ export default {
     const loadingBooks = computed(() => bookStore.loading);
     const errorBooks = computed(() => bookStore.error);
 
-    const register = computed<Object>(() => registerStore.listOfBooks || {});
-    const loadingRegister = computed(() => registerStore.loading);
-    const errorRegister = computed(() => registerStore.error);
-
     const usersData = computed<Array<InputUser>>(() => userStore.listOfUsers || []);
     const loadingUsers = computed(() => userStore.loading);
     const errorUsers = computed(() => userStore.error);
       
     onMounted(async () => {
         await bookStore.fetchBooks();
-        BooksLenght.value = lenghtBooks()
-        UsersLenght.value = numberOfUsers()
+        BooksLenght.value = books.value.length
+        UsersLenght.value = usersData.value.length
         console.log(bookStore.loading);
     });
-
-    const lenghtBooks = () => {
-        const numberOfBooks = books
-        console.log(numberOfBooks);
-        
-        return numberOfBooks.value.length
-    }
-
-    const numberOfUsers = () => {
-        const usersInTheSystem = usersData
-
-        return usersInTheSystem.value.length
-    }
-
-    const formatDate = (date: {_seconds: number, _nanoseconds: number} | undefined) => {
-        if (!date) { return 'Invalid date' }
-
-        const newDate = new Date(date._seconds * 1000)
-        const newTime = new Date(date._nanoseconds).getTime()
-        
-        return `${newDate.toUTCString()}`
-    }
 
     watch(books, (newBooks) => {
         if (newBooks && newBooks.length > 0) {
@@ -111,10 +56,19 @@ export default {
         UsersLenght,
         MostRecentBook,
         MostRecentUpdatedBook,
-        formatDate,
     };
   },
-};
+  methods:{
+    formatDate(date: {_seconds: number, _nanoseconds: number} | undefined){
+        if (!date) { return 'Invalid date' }
+
+        const newDate = new Date(date._seconds * 1000)
+        const newTime = new Date(date._nanoseconds).getTime()
+        
+        return `${newDate.toUTCString()}`
+    }
+  }
+});
 </script>
 
 <template>

@@ -1,8 +1,8 @@
 <script lang="ts">
-import { ref, onMounted, computed, watch, reactive } from "vue";
+import { ref, onMounted, computed, watch, reactive, defineComponent } from "vue";
 import { useRegisterStore } from "@/stores/registeredBooks";
 
-export default {
+export default defineComponent({
   name: "chart",
   setup() {
     const primeChart = ref()
@@ -29,8 +29,8 @@ export default {
     });
 
     watch(register, (newValue) => {
-  console.log('Novo valor de listOfBooks:', newValue);
-});
+      console.log('Novo valor de listOfBooks:', newValue);
+    });
 
   
     console.log("Register book s : " , register);
@@ -82,13 +82,13 @@ export default {
     })
 
     const documentStyle = getComputedStyle(document.documentElement);
-      const textColor = documentStyle.getPropertyValue("--p-text-color");
-      const textColorSecondary = documentStyle.getPropertyValue(
-        "--p-text-muted-color"
-      );
-      const surfaceBorder = documentStyle.getPropertyValue(
-        "--p-content-border-color"
-      );
+    const textColor = documentStyle.getPropertyValue("--p-text-color");
+    const textColorSecondary = documentStyle.getPropertyValue(
+      "--p-text-muted-color"
+    );
+    const surfaceBorder = documentStyle.getPropertyValue(
+      "--p-content-border-color"
+    );
   
     return {
       primeChart,
@@ -146,7 +146,7 @@ export default {
       dates
     };
   },
-};
+});
 </script>
 
 <template>
@@ -155,7 +155,7 @@ export default {
         <Button label="Monthly" text raised size="small" class="w-20"/>
         <Button label="Yearly" text raised size="small" class="w-20"/>
         <DatePicker v-model="dates" showIcon selectionMode="range" :manualInput="false" />
-        <Select v-model="selectedCity" :options="year" optionLabel="name" placeholder="Select a City" checkmark :highlightOnSelect="false" class="w-full md:w-56" />
+        <Select v-model="selectedCity" :options="year" optionLabel="name" placeholder="Select a Year" checkmark :highlightOnSelect="false" class="w-full md:w-56" />
       </div>
   
       <Chart :key="chartKeys"  ref="primeChart" type="line" :data="chartData" :options="chartOptions" class="h-[29rem]" />

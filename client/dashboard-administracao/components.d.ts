@@ -24,7 +24,6 @@ declare module 'vue' {
     DynamicPhotoFrame: typeof import('./src/components/DynamicPhotoFrame.vue')['default']
     EditPopover: typeof import('./src/components/bookView/editPopover.vue')['default']
     FloatLabel: typeof import('primevue/floatlabel')['default']
-    HelloWorld: typeof import('./src/components/HelloWorld.vue')['default']
     IconCommunity: typeof import('./src/components/icons/IconCommunity.vue')['default']
     IconDocumentation: typeof import('./src/components/icons/IconDocumentation.vue')['default']
     IconEcosystem: typeof import('./src/components/icons/IconEcosystem.vue')['default']
@@ -47,6 +46,7 @@ declare module 'vue' {
     TheWelcome: typeof import('./src/components/TheWelcome.vue')['default']
     Toast: typeof import('primevue/toast')['default']
     ToggleButton: typeof import('primevue/togglebutton')['default']
+    UsersTable: typeof import('./src/components/usersView/usersTable.vue')['default']
     WelcomeItem: typeof import('./src/components/WelcomeItem.vue')['default']
   }
 }

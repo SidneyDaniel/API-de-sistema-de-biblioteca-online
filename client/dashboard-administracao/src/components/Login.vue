@@ -95,39 +95,7 @@ export default {
         const url = response.url; 
         await useAuthStore().setAuthToken(); 
         this.$router.push('/'); console.log(url);
-
-        // signInWithEmailAndPassword(auth, this.email, this.password)
-        // .then((userCredential) => {
-        //   // Signed in 
-        //   const user = userCredential.user;
-        //   user.getIdToken().then(idToken => {
-        //     fetch('/login/adm', {
-        //       method: 'POST',
-        //       headers: {
-        //         'Content-Type': 'application/json'
-        //       },
-        //       body: JSON.stringify({ idToken })
-
-        //     })
-        //       .then(async response => {
-        //         const url = response.url
-        //         alert("Login feito com sucesso!!!!😁😀")
-        //         await useAuthStore().setAuthToken();
-        //         // window.location.href = url;
-        //         this.$router.push('/');
-        //         // window.location.href = response.url;
-        //         console.log(url);
-        //       })
-        //       .catch(error => console.error(error));
-        //   });
-        // })
-        // .catch((error) => {
-        //   this.loading = false
-        //   alert(getErrorWrongPassword(error))
-        //   throw new Error
-        //   const errorCode = error.code;
-        //   const errorMessage = error.message;
-        // });
+        
       } catch (error) {
         this.toastService.add({ severity: 'error', summary: 'Fail', detail: `${getErrorWrongPassword(error as fireBaseError)}`, life: 3000 });
         // alert(getErrorWrongPassword(error as fireBaseError))
@@ -136,36 +104,6 @@ export default {
         this.loading = false
       }
 
-      // signInWithEmailAndPassword(auth, this.email, this.password)
-      //   .then((userCredential) => {
-      //     // Signed in 
-      //     const user = userCredential.user;
-      //     user.getIdToken().then(idToken => {
-      //       fetch('/login/adm', {
-      //         method: 'POST',
-      //         headers: {
-      //           'Content-Type': 'application/json'
-      //         },
-      //         body: JSON.stringify({ idToken })
-
-      //       })
-      //         .then(async response => {
-      //           const url = response.url
-      //           alert("Login feito com sucesso!!!!😁😀")
-      //           await useAuthStore().setAuthToken();
-      //           // window.location.href = url;
-      //           this.$router.push('/');
-      //           // window.location.href = response.url;
-      //           console.log(url);
-      //         })
-      //         .catch(error => console.error(error));
-      //     });
-      //   })
-      //   .catch((error) => {
-      //     alert(getErrorWrongPassword(error))
-      //     const errorCode = error.code;
-      //     const errorMessage = error.message;
-      //   });
     }
   }
 };

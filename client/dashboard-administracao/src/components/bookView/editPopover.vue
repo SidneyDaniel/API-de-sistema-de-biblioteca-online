@@ -1,28 +1,12 @@
 <script lang="ts">
-import { ref, type PropType } from 'vue';
+import { defineComponent, ref, type PropType } from 'vue';
 import { useBooksStore } from '@/stores/books';
 import CreateReadUpdateDelete from '@/services/CRUD';
 import { useToastService } from '@/composables/useToastService';
 
+import type { Book } from '@/types/booksTypes';
 
-type Book = {
-  author: string;
-  bookDataCreation: {
-    _seconds: number;
-    _nanoseconds: number;
-  };
-  bookUpdateDate: {
-    _seconds: number;
-    _nanoseconds: number;
-  };
-  cover: string;
-  name: string;
-  pages: string;
-  publisher: string;
-  readLink: string;
-};
-
-export default {
+export default defineComponent({
     name: "editPopover",
     data(){
         return{     
@@ -101,7 +85,7 @@ export default {
         
     },
    
-};
+});
 </script>
 
 <template>
@@ -118,16 +102,7 @@ export default {
 
             <section class="flex flex-col gap-4 items-end w-[85vw] max-w-[35rem]">
                     <div class="flex flex-col gap-4 w-full">
-                        <!-- <div class="flex flex-col gap-3 justify-evenly">
-                            <div class="w-fit min-h-full rounded-lg bg-primary-emphasis p-2">
-                                <div v-if="!cover || !isValidURL(cover) " class="flex flex-col justify-around items-center font-extralight w-60 min-h-full bg-primary-contrast rounded-lg">
-                                    <h1>Publisher</h1>
-                                    <h2>Title</h2>
-                                    <h3>Author</h3>
-                                </div>
-                                <img v-else  :src="cover" alt="image" class="rounded-lg w-60 min-w-60 contain-size min-h-full" />
-                            </div> 
-                        </div> -->
+        
                         <DynamicPhotoFrame  :imageUrl="cover" />
     
                         <div class="flex flex-col gap-2 w-full">

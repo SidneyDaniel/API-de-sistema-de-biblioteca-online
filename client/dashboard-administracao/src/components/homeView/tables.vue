@@ -1,26 +1,9 @@
 <script lang="ts">
-import { onMounted, computed, watch, reactive} from "vue";
+import { onMounted, computed, watch, reactive, defineComponent} from "vue";
 import { useUserStore } from "@/stores/usersStore";
+import type { InputUser, OutputUser } from "@/types/booksTypes";
 
-interface InputUser extends Object {
-    creationTime: Date;
-    disabled: boolean;
-    displayName: string;
-    email: string;
-    emailVerified: boolean;
-    lastSignInTime: Date;
-    tokensValidAfterTime: Date;
-    uid: string;
-}
-
-interface OutputUser {
-  name: string;
-  email: string;
-  uid: string;
-  status: boolean;
-}
-
-export default {
+export default defineComponent({
   name: "table",
   setup() {
     const userStore = useUserStore()
@@ -53,29 +36,26 @@ export default {
         const twoMontAgo = new Date()
         const lastSignIn = new Date(date)
         twoMontAgo.setMonth(today.getMonth() - 2)
-        // console.log(twoMontAgo);
-        // console.log(today)
-        // console.log(lastSignIn);
-        
-        // console.log(lastSignIn >= twoMontAgo)
+
         return lastSignIn >= twoMontAgo
     }
 
-    const getSeverity = (status: boolean) => {
-    switch (status) {
-        case true:
-            return 'sucess';
-
-        case false:
-            return 'warn';
-    }
-}
-
     return {
-        users, loading, error, getSeverity
+        users, loading, error,
     };
   },
-};
+  methods:{
+    getSeverity(status: boolean){
+      switch (status) {
+          case true:
+              return 'sucess';
+
+          case false:
+              return 'warn';
+      }
+    }
+  }
+});
 </script>
 
 <template>
@@ -107,10 +87,6 @@ export default {
 </template>
 
 <style>
-/* .p-datatable-column-title {
-    color: var(--p-primary-color);
-} */
-
 .p-datatable-header {
     color: var(--p-primary-color) !important;
 }

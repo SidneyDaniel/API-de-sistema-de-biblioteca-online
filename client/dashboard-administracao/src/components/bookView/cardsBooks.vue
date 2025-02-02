@@ -1,26 +1,10 @@
 <script lang="ts">
-import { ref, type PropType } from 'vue';
+import { defineComponent, ref, type PropType } from 'vue';
 import BatchDeleteOperation from '@/services/deleteMultiples';
 import EditPopover from './editPopover.vue';
+import type { Book } from '@/types/booksTypes';
 
-type Book = {
-  author: string;
-  bookDataCreation: {
-    _seconds: number;
-    _nanoseconds: number;
-  };
-  bookUpdateDate: {
-    _seconds: number;
-    _nanoseconds: number;
-  };
-  cover: string;
-  name: string;
-  pages: string;
-  publisher: string;
-  readLink: string;
-};
-
-export default {
+export default defineComponent({
     name: "CardBook",
     data(){
         return{     
@@ -61,7 +45,7 @@ export default {
             console.log('Marked changed from', oldValue, 'to', newValue); 
         }
     }
-};
+});
 </script>
 <!-- Já sei como resolver essa bagunça, get rid of all of that Sidney, tira a responsabilidad do v-for de cima do bookView e passa para o componente filho no caso esse   -->
 <template>

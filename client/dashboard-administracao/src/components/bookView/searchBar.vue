@@ -1,25 +1,7 @@
 <script lang="ts">
-import { ref } from 'vue';
+import { defineComponent, ref } from 'vue';
 
-
-type Book = {
-  author: string;
-  bookDataCreation: {
-    _seconds: number;
-    _nanoseconds: number;
-  };
-  bookUpdateDate: {
-    _seconds: number;
-    _nanoseconds: number;
-  };
-  cover: string;
-  name: string;
-  pages: string;
-  publisher: string;
-  readLink: string;
-};
-
-export default {
+export default defineComponent({
   name: "searchBar",
   props: {
     listOfBooksToSearch:{
@@ -32,7 +14,7 @@ export default {
     
     return {visible}
   },
-};
+});
 
 </script>
 
