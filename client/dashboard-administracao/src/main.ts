@@ -3,13 +3,13 @@ import './assets/main.css'
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 import PrimeVue from 'primevue/config'
-import Aura from '@primevue/themes/aura';
+import Aura from '@primeuix/themes/aura';
 import ToastService from 'primevue/toastservice'
 
 import App from './App.vue'
 import router from './router'
 import { useAuthStore } from './stores/auth';
-import { definePreset } from '@primevue/themes';
+import { definePreset } from '@primeuix/themes';
 
 const app = createApp(App)
 

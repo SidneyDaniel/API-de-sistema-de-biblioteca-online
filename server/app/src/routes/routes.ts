@@ -2,42 +2,42 @@ import express from 'express';
 export const router = express.Router();
 
 //> SESSION
-import sign__In from '../routes/routes-session/Sign_In';
-import sign__Out from '../routes/routes-session/Sign_Out';
-import sign__Up from '../routes/routes-session/Sign_Up';
+import sign__In from './routes-session/Sign_In';
+import sign__Out from './routes-session/Sign_Out';
+import sign__Up from './routes-session/Sign_Up';
 
-import verifiy__Session from '../routes/routes-session/verify_session';
+import verifiy__Session from './routes-session/verify_session';
 // // const getUidFrom__Session = require('../routes/session/getUidFromSession.js')
 
 // //>ACESS-CODE
-import getAcessCode from '../routes/routes-accesCode/get-AccesCode';
-import getClassCode from '../routes/routes-accesCode/get-ClassCode'; 
-import getSavedCode from '../routes/routes-accesCode/get-SavedCode';
+import getAcessCode from './routes-accesCode/get-AccesCode';
+import getClassCode from './routes-accesCode/get-ClassCode'; 
+import getSavedCode from './routes-accesCode/get-SavedCode';
 
 // //Admin FireStoreRoutes 
 // // > CRUD
-import createBook from '../routes/routes-adminFireStore/CRUD/create-Book';
-import readBook from '../routes/routes-adminFireStore/CRUD/read-Book';
-import removeBook from '../routes/routes-adminFireStore/CRUD/remove-Book';
-import updateBook from '../routes/routes-adminFireStore/CRUD/update-Book';
-import deleteBookBatch from '../routes/routes-adminFireStore/CRUD/delete-book-batch'
+import createBook from './routes-adminFireStore/CRUD/create-Book';
+import readBook from './routes-adminFireStore/CRUD/read-Book';
+import removeBook from './routes-adminFireStore/CRUD/remove-Book';
+import updateBook from './routes-adminFireStore/CRUD/update-Book';
+import deleteBookBatch from './routes-adminFireStore/CRUD/delete-book-batch'
 
 // // *Registered Books
-import checkLastBook from '../routes/routes-adminFireStore/check-lastRegisteredBook';
-import registeredBooks from '../routes/routes-adminFireStore/registered-Books';
+import checkLastBook from './routes-adminFireStore/check-lastRegisteredBook';
+import registeredBooks from './routes-adminFireStore/registered-Books';
 
 // // > FavBooks
-import addFavBook from '../routes/routes-favBooks/add-FavBook';
-import getFavBook from '../routes/routes-favBooks/get-FavBook';
-import removeFavBook from '../routes/routes-favBooks/remove-FavBook';
+import addFavBook from './routes-favBooks/add-FavBook';
+import getFavBook from './routes-favBooks/get-FavBook';
+import removeFavBook from './routes-favBooks/remove-FavBook';
 
 
 // // >UserRouter
-import delUser from '../routes/routes-user/delete-User';
-import editUser from '../routes/routes-user/edit-UserData';
-import editAdminUser from '../routes/routes-user/edit-UserDataAdmin';
-import listAllUser from '../routes/routes-user/list-AllUsers';
-import userData from '../routes/routes-user/user-Data';
+import delUser from './routes-user/delete-User';
+import editUser from './routes-user/edit-UserData';
+import editAdminUser from './routes-user/edit-UserDataAdmin';
+import listAllUser from './routes-user/list-AllUsers';
+import userData from './routes-user/user-Data';
 
 
 router.use('/', 

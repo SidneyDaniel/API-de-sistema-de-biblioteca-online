@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { RouterLink, RouterView } from 'vue-router'
-import MenuView from './views/MenuView.vue'
-import LoginView from './views/LoginView.vue';
+import { RouterView } from 'vue-router'
+import MenuView from '@/views/MenuView.vue'
+import LoginView from '@/views/LoginView.vue';
 import { useAuthStore } from './stores/auth';
 import Toast from 'primevue/toast';
 

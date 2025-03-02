@@ -6,7 +6,7 @@ import { useUserStore } from "@/stores/usersStore";
 import type { Book, InputUser } from "@/types/booksTypes";
 
 export default defineComponent({
-  name: "cards",
+  name: "homeCards",
   setup() {
     const bookStore = useBooksStore();
     const userStore = useUserStore();

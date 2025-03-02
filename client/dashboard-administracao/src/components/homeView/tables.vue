@@ -4,7 +4,7 @@ import { useUserStore } from "@/stores/usersStore";
 import type { InputUser, OutputUser } from "@/types/booksTypes";
 
 export default defineComponent({
-  name: "table",
+  name: "homeTable",
   setup() {
     const userStore = useUserStore()
     const usersData = computed<Array<InputUser>>(() => userStore.listOfUsers || []);

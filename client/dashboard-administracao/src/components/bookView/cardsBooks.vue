@@ -24,16 +24,16 @@ export default defineComponent({
     emits: ['toFalse'],
     methods: {
         async deleteMultipleBooks(list: Array<string>){
-            let loading = false
+            const loading = ref(false)
             try { 
-                loading = true
+                loading.value = true
                 await new BatchDeleteOperation(list).deleteOperation()
             } catch (error) {
                 console.log(error);
-                loading = false
+                loading.value = false
                 return error
             }finally {  
-                loading = false
+                loading.value = false
             } 
         }
     },
@@ -47,7 +47,6 @@ export default defineComponent({
     }
 });
 </script>
-<!-- Já sei como resolver essa bagunça, get rid of all of that Sidney, tira a responsabilidad do v-for de cima do bookView e passa para o componente filho no caso esse   -->
 <template>
     <div class="custom_grid_for_books_list">
         <Card class="w-full min-w-40 max-w-72 overflow-hidden relative" v-for="books in book" :key="books.name">

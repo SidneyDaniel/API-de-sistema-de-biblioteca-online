@@ -3,7 +3,7 @@ import { ref, onMounted, computed, watch, reactive, defineComponent } from "vue"
 import { useRegisterStore } from "@/stores/registeredBooks";
 
 export default defineComponent({
-  name: "chart",
+  name: "homeChart",
   setup() {
     const primeChart = ref()
     // const chartData = reactive({});

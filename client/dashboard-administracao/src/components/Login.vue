@@ -51,7 +51,7 @@ const firebaseConfig = {
 
 import { ref } from 'vue';
 
-const value = ref(null);
+// const value = ref(null);
 
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);
@@ -59,7 +59,7 @@ const app = initializeApp(firebaseConfig);
 
 
 export default {
-  name:'login',
+  name:'LoginPage',
   data() {
     return {
       email: '',
