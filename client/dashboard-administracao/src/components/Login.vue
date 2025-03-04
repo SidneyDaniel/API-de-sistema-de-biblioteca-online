@@ -1,4 +1,5 @@
 <template>
+  <Toast />
   <form v-on:submit.prevent="login" class="flex flex-col gap-6 p-6 w-96 border border-surface shadow rounded-border ">
     <ProgressBar v-if="loading" mode="indeterminate" style="height: 6px"></ProgressBar>
     <div class="text-center">
@@ -23,40 +24,13 @@
     </FloatLabel>
     <Button type="submit" label="Sign In" icon="pi pi-user" size="small"/>
   </form>
-<!-- 
-<div>
-  <input type="email" v-model="email" placeholder="Email">
-  <input type="password" v-model="password" placeholder="Password">
-  <button @click="login">Login</button>
-</div> -->
-  </template>
-  
+</template>
+
 <script lang="ts">
 import { useToastService } from '@/composables/useToastService';
-import { useAuthStore } from '@/stores/auth';
-import { initializeApp } from 'firebase/app';
-import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
-import firebase from 'firebase/compat/app';
-
-
-const firebaseConfig = {
-  apiKey: "AIzaSyDzSHwAtTj36nO7DPCdtiWqrcVhJ34RLco",
-  authDomain: "literrisinventum.firebaseapp.com",
-  projectId: "literrisinventum",
-  storageBucket: "literrisinventum.appspot.com",
-  messagingSenderId: "863313920136",
-  appId: "1:863313920136:web:5a35c51a3cd02bf4631f3d",
-  measurementId: "G-8PP422JWJ9"
-};
+import AuthService from '@/services/authService';
 
 import { ref } from 'vue';
-
-// const value = ref(null);
-
-// Initialize Firebase
-firebase.initializeApp(firebaseConfig);
-const app = initializeApp(firebaseConfig);
-
 
 export default {
   name:'LoginPage',
@@ -73,53 +47,46 @@ export default {
   },
   methods: {
     async login() {
-      const auth = getAuth(app);
-
       try {
         this.loading = true
         
-        const userCredential = await signInWithEmailAndPassword(auth, this.email, this.password)
-        const user = userCredential.user; 
-        const idToken = await user.getIdToken(); 
+        const authService = new AuthService({
+          email: this.email, 
+          password: this.password
+        })
 
-        const response = await fetch('/login/adm', { 
-          method: 'POST', 
-          headers: { 'Content-Type': 'application/json' }, 
-          body: JSON.stringify({ idToken })
+        const response = await authService.login() as Response
+      
+        if (typeof response === 'string' || response instanceof Error) { 
+          throw new Error(response instanceof Error ? response.message : response); 
+        }
+
+        if(!response.ok) {
+          const responseBody = await response.json()
+          throw new Error(responseBody.message)
+        }
+        
+        this.toastService.add({ 
+          severity: 'success', 
+          summary: 'Success', 
+          detail: `Hello there!`, 
+          life: 3000 
         });
 
+        this.$router.push('/');        
+      } catch (error) {      
+        this.toastService.add({ 
+          severity: 'error', 
+          summary: 'Fail', 
+          detail: `${error}`, 
+          life: 6000 
+        });
 
-        if (!response.ok) { throw new Error('Failed to login'); }
-
-        alert("Login feito com sucesso!!!!😁😀"); 
-        const url = response.url; 
-        await useAuthStore().setAuthToken(); 
-        this.$router.push('/'); console.log(url);
-        
-      } catch (error) {
-        this.toastService.add({ severity: 'error', summary: 'Fail', detail: `${getErrorWrongPassword(error as fireBaseError)}`, life: 3000 });
-        // alert(getErrorWrongPassword(error as fireBaseError))
       } finally {
-        this.toastService.add({ severity: 'success', summary: 'Sucesso', detail: 'Bem vindo novamente!', life: 3000 });
         this.loading = false
       }
 
     }
   }
 };
-
-interface fireBaseError extends Error {
-    code: string
-}
-  
-function getErrorWrongPassword(error: fireBaseError) {
-  const errorMessages: Record<string, string> = {
-    "auth/wrong-password":   "Senha Incorreta, tente novamente!",
-    "auth/invalid-email":    "Email inválido, ou inexistente!",
-    "auth/missing-password": "Coloque sua senha por favor",
-    "auth/user-not-found": "Usuário não encontrado!",
-    "auth/email-already-exists": "Este email já está em uso!"
-  };
-  return errorMessages[error.code] || error.message;
-}
 </script>

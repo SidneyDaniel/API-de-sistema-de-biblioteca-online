@@ -2,11 +2,7 @@ import router from "@/router"
 import { useAuthStore } from '@/stores/auth';
 import { initializeApp } from "firebase/app";
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
-import type { FirebaseError } from "firebase/app";
-
-// interface fireBaseError extends Error {
-//   code: string
-// }
+import { FirebaseError } from "firebase/app";
 
 class AuthService {
     private _email: string
@@ -16,31 +12,6 @@ class AuthService {
         this._email = params.email
         this._password = params.password
     } 
-
-    public get email(): string {
-      return this._email
-    }
-
-    public set email(value: string ) {
-      if (value) {
-        // Validação simples de email
-        if (!/\S+@\S+\.\S+/.test(value)) {
-          throw new Error('Email inválido');
-        }
-        this._email = value;
-      }
-    }
-
-    public get password(): string {
-      return this._password;
-    }
-
-    public set password(value: string) {
-      if (value && value.length < 6) {
-        throw new Error('A senha deve ter pelo menos 6 caracteres');
-      }
-        this._password = value;
-    }
 
     private firebaseConfig() {
         const firebaseConfig = {
@@ -82,17 +53,19 @@ class AuthService {
           headers: { 'Content-Type': 'application/json' }, 
           body: JSON.stringify({ idToken })
         });
+        
 
+        if (!response.ok) { 
+          const responseBody = await response.json()
+          throw new Error(responseBody.message); 
+        }
 
-        if (!response.ok) { throw new Error('Failed to login'); }
-
-        alert("Login feito com sucesso!!!!😁😀"); 
-        const url = response.url; 
         await useAuthStore().setAuthToken(); 
-        // this.$router.push('/'); console.log(url);
-        return url
+        return response
       } catch (error) {
-        return this.getErrorWrongPassword(error as FirebaseError)
+        const errorMessage = error instanceof FirebaseError ? this.getErrorWrongPassword(error) : error
+
+        return errorMessage
       } 
     }
 
@@ -101,12 +74,14 @@ class AuthService {
             const response = await fetch('/sessionLogout', { method: 'POST' })
 
             if (!response.ok) { throw new Error('Failed to logOut'); }
-          } catch (error) {
-            console.log(error)
-          } finally {
+
             await router.go(0)
             await router.push({ path: '/login' });
-          }
+
+            return response
+          } catch (error) {
+            return error 
+          } 
     }
  
 }

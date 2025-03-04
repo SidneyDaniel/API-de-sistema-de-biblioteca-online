@@ -1,13 +1,17 @@
 <script lang="ts">
 import { useRouter } from 'vue-router';
 import { defineComponent, ref } from 'vue';
+import AuthService from '@/services/authService';
+import { useToastService } from '@/composables/useToastService';
 
 export default defineComponent({
   name: 'MenuComponent',
   setup(){
     const checked = ref(false)
     const router = useRouter()
-
+    const toastService = useToastService();
+    const confirm = ref(false)
+    
     const items = [
       {
         separator: true
@@ -55,19 +59,8 @@ export default defineComponent({
             icon: 'pi pi-sign-out',
             shortcut: '⌘+Q',
             path: '/',
-            command: async () => {
-
-              try {
-                const response = await fetch('/sessionLogout', { method: 'POST' })
-
-                if (!response.ok) { throw new Error('Failed to logOut'); }
-              } catch (error) {
-                console.log(error)
-              } finally {
-                await router.go(0)
-                await router.push({ path: '/login' });
-              }
-
+            command: () => {
+               confirm.value = true
             }
           }
         ]
@@ -77,12 +70,37 @@ export default defineComponent({
       }
     ]
     
-    return { checked, router, items }
+    return { checked, router, items, confirm, toastService}
   },
   methods:{
     toggleColorScheme() {
       const element = document.querySelector('html');
       element?.classList.toggle('my-app-dark');
+    }, 
+    async logOut(){
+      try {
+        const authService = new AuthService({ email: '', password: '' })
+        const response = await authService.logOut() as Response
+
+        if (!response.ok) { throw new Error('Failed to logOut'); }
+
+        this.toastService.add({
+          severity: 'info',
+          summary: 'Success',
+          detail: `See you Later 😊`,
+          life: 3000
+        });
+        
+
+      } catch (error) {
+        this.toastService.add({
+          severity: 'error',
+          summary: 'Success',
+          detail: `Something went wrong ☹️`,
+          life: 3000
+        });
+        console.log(error)
+      }
     }
   }
 
@@ -103,7 +121,7 @@ export default defineComponent({
           </span>
         </template>
 
-        
+
         <!-- <template #submenulabel="{ item }">
           <span class="text-primary font-bold">{{ item.label }}</span>
         </template> -->
@@ -128,16 +146,17 @@ export default defineComponent({
 
         </template>
 
-        <template #end>   
+        <template #end>
           <div class="flex flex-col gap-7 p-1">
             <div class="flex flex-col items-center">
-              <Avatar image="https://primefaces.org/cdn/primevue/images/avatar/amyelsner.png" size="xlarge" shape="circle" />
+              <Avatar image="https://primefaces.org/cdn/primevue/images/avatar/amyelsner.png" size="xlarge"
+                shape="circle" />
               <span class="inline-flex flex-col items-start">
-                  <span class="font-bold">Amy Elsner</span>  
-                  <!-- <Tag icon="pi pi-user" value="emailAleatorio12@gmail.com" class="text-xs"></Tag>  -->
+                <span class="font-bold">Amy Elsner</span>
+                <!-- <Tag icon="pi pi-user" value="emailAleatorio12@gmail.com" class="text-xs"></Tag>  -->
               </span>
             </div>
-  
+
             <div class="flex flex-row justify-center">
               <Tag icon="pi pi-user" value="Admin" />
               <Divider layout="vertical" />
@@ -148,6 +167,25 @@ export default defineComponent({
         </template>
 
       </Menu>
+
+
+      <Dialog v-model:visible="confirm" :style="{ width: '450px' }" :modal="true">
+        <template #header>
+          <div class="inline-flex items-center justify-center gap-2">
+            <span class="text-primary font-bold text-2xl">So, Soon?</span>
+          </div>
+        </template>
+
+        <div class="flex items-center gap-4">
+          <i class="pi pi-sign-out !text-3xl" />
+          <span>Are you sure you want to logout?</span>
+        </div>
+
+        <template #footer>
+          <Button label="No" icon="pi pi-times" text @click="confirm = false" />
+          <Button label="Yes" icon="pi pi-check" @click="logOut" />
+        </template>
+      </Dialog>
     </nav>
   </header>
 
