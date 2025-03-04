@@ -2,13 +2,13 @@ import {defineStore } from "pinia";
 
 export const useUserStore = defineStore('usersDataStore', {
     state: () => ({
-      listOfUsers: null,
+      listOfUsers: [],
       loading: false,
       error: '' as string
     }),
     actions: {
       async fetchUsersData() {
-        if (this.listOfUsers !== null) return
+        if (this.listOfUsers.length > 0) return
 
         this.loading = true
         this.error = '' as string
