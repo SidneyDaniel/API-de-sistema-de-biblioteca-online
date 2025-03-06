@@ -2,11 +2,15 @@
 import { onMounted, computed, watch, reactive, defineComponent, ref} from "vue";
 import { useUserStore } from '@/stores/usersStore';
 import type { InputUser, OutputUser } from '@/types/booksTypes';
+import usersService from "@/services/userServices";
+import { useToastService } from "@/composables/useToastService";
 
 export default defineComponent({
     name:'usersTable',
     setup() {
     const userStore = useUserStore()
+
+    const toastService = useToastService();
 
     const editingRows = ref([]);
 
@@ -42,16 +46,43 @@ export default defineComponent({
         { label: 'Inactive', value: false },
       ]
 
-    const onRowEditSave = (event: { newData: OutputUser; index: number; }) => {
+    const onRowEditSave = async (event: { newData: OutputUser; index: number; }) => {
       let { newData, index } = event;
-
-
-      console.log('%%NewData');
       
-      console.log(newData);
-      console.log(index);
-      
+      try {
+        const userService = new usersService({
+          userIdentifier: newData.uid,
+          newUserName: newData.name,
+          newUserEmail: newData.email,
+        })
 
+        const response = await userService.EditUsers() as Response
+
+        if (typeof response === 'string' || response instanceof Error) {
+          throw new Error(response instanceof Error ? response.message : response);
+        }
+
+        if (!response.ok) {
+          const responseBody = await response.json()
+          throw new Error(responseBody.message)
+        }
+
+        toastService.add({
+          severity: 'success',
+          summary: 'Success',
+          detail: `User Updated`,
+          life: 3000
+        });
+
+      } catch (error) {
+        toastService.add({
+          severity: 'error',
+          summary: 'Fail',
+          detail: `${error instanceof Error}`,
+          life: 3000
+        });
+      }
+     
       users[index] = newData;
       
       console.log('%%Users');
@@ -81,6 +112,7 @@ export default defineComponent({
 </script>
 
 <template>
+  <Toast/>
   <div class="w-full">
     <DataTable v-model:editingRows="editingRows" :value="users" editMode="row" dataKey="uid" datatable.header.color="var(--p-primary-500)"
       @row-edit-save="onRowEditSave" :pt="{
