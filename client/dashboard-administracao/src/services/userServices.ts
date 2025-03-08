@@ -34,6 +34,27 @@ class usersService {
         }
        
     }
+
+    public async deleteUser(){
+        try {
+            const response = await fetch('/deletarUsuarios', { 
+                method: 'DELETE',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ 
+                    userIdentifier: this._userIdentifier
+                })
+            });
+    
+            if (!response.ok) { throw new Error('Something went wrong!'); }
+
+            await commitUsers()
+
+            return response 
+        } catch (error) {
+            return error instanceof Error
+        }
+       
+    }
     
 }
 

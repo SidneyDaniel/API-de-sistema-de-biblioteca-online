@@ -153,39 +153,33 @@ class UserController {
   }
 
   async deletarUsuario(req: Request, res: Response) {
-    const { userName } = req.body;
-    console.log(userName);
-    // res.json(userName)
+    const { userIdentifier } = req.body;
 
-    const listAllUsers = async (nextPageToken?: string) => {
-      await admin.auth()
-        .listUsers(1000, nextPageToken)
-        .then((listUsersResult) => {
+    try {
 
-          const user = listUsersResult.users.find(user => user.displayName === userName);
+      const identifier: UidIdentifier = {
+        uid: userIdentifier.trim()
+      }
+      
+      await admin.auth().deleteUser(identifier.uid || '')
 
-          console.log(user?.uid);
+      res.status(204).json({
+        success: true,
+        message: `User with the UID"${userIdentifier}" deleted successfully.`,
+      });
+            
+    } catch (error) {
+      const errorHandler = error as Error
 
-          admin.auth()
-            .deleteUser(user?.uid || '')
-            .then(() => {
-              console.log('Successfully deleted user');
-              res.json("Successfully deleted user")
-
-            })
-            .catch((error) => {
-              console.log('Error deleting user:', error);
-              res.json({ error })
-            });
-
-        })
-        .catch((error) => {
-          console.log('Error', error);
-        });
-    };
-    // Start listing users from the beginning, 1000 at a time.
-
-    await listAllUsers();
+      const message = errorHandler.message || 'An unexpected error occurred. Please try again later.';
+  
+      console.error(error);
+  
+      res.status(400).json({
+        success: false,
+        message,
+      });
+    }
   }
 };
 

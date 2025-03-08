@@ -13,6 +13,7 @@ export default defineComponent({
     const toastService = useToastService();
 
     const editingRows = ref([]);
+    const editLoading = ref(false)
 
     const deleteUserDialog = ref(false)
 
@@ -46,9 +47,54 @@ export default defineComponent({
         { label: 'Inactive', value: false },
       ]
 
-    const onRowEditSave = async (event: { newData: OutputUser; index: number; }) => {
+    return {
+        users, editingRows, loading, error, toastService, statuses, deleteUserDialog, editLoading
+    };
+  },
+  methods:{
+    getSeverity(status: boolean){
+      switch (status) {
+          case true:
+              return 'sucess';
+
+          case false:
+              return 'warn';
+      }
+    },
+    async deleteUser(identifier: OutputUser){
+        try {
+          const usersServiceDelete = new usersService(({
+            userIdentifier: identifier.uid,
+            newUserName: identifier.name,
+            newUserEmail: identifier.email,
+          }))
+
+          const response = await usersServiceDelete.deleteUser() as Response
+
+          if (!response.ok) {
+            const responseBody = await response.json()
+            throw new Error(responseBody.message)
+          }
+
+          this.toastService.add({
+          severity: 'success',
+          summary: 'Success',
+          detail: `${response.text()}`,
+          life: 3000
+        });
+
+        } catch (error) {
+          this.toastService.add({
+          severity: 'success',
+          summary: 'Success',
+          detail: `${error}`,
+          life: 3000
+        });
+        }
+    },
+    async onRowEditSave(event: { newData: OutputUser; index: number; }){
       let { newData, index } = event;
-      
+      this.editLoading = true
       try {
         const userService = new usersService({
           userIdentifier: newData.uid,
@@ -67,45 +113,25 @@ export default defineComponent({
           throw new Error(responseBody.message)
         }
 
-        toastService.add({
+        this.toastService.add({
           severity: 'success',
           summary: 'Success',
           detail: `User Updated`,
           life: 3000
         });
 
+        this.editLoading = false
       } catch (error) {
-        toastService.add({
+        this.toastService.add({
           severity: 'error',
           summary: 'Fail',
           detail: `${error instanceof Error}`,
           life: 3000
         });
+        this.editLoading = false
       }
      
-      users[index] = newData;
-      
-      console.log('%%Users');
-      console.log(users);
-      
-    };
-
-    return {
-        users, editingRows, loading, error, onRowEditSave, statuses, deleteUserDialog
-    };
-  },
-  methods:{
-    getSeverity(status: boolean){
-      switch (status) {
-          case true:
-              return 'sucess';
-
-          case false:
-              return 'warn';
-      }
-    },
-    deleteUser(value: object){
-        console.log(value);
+      this.users[index] = newData;
     }
   }
 })
@@ -113,6 +139,11 @@ export default defineComponent({
 
 <template>
   <Toast/>
+  <Dialog v-model:visible="editLoading" modal pt:root:class="!border-0 !bg-transparent !shadow-none z-10">
+    <template #container>
+      <i class="pi pi-spin pi-spinner text-primary-400 z-20" style="font-size: 3rem"></i>
+    </template>
+  </Dialog>
   <div class="w-full">
     <DataTable v-model:editingRows="editingRows" :value="users" editMode="row" dataKey="uid" datatable.header.color="var(--p-primary-500)"
       @row-edit-save="onRowEditSave" :pt="{
@@ -139,13 +170,13 @@ export default defineComponent({
 
       <Column field="uid" header="Uid" style="width: 20%">
         <template #editor="{ data, field }">
-          <InputText v-model="data[field]" fluid />
+          <InputText disabled  v-model="data[field]" fluid />
         </template>
       </Column>
 
       <Column field="status" header="Status" style="width: 20%">
         <template #editor="{ data, field }">
-          <Select v-model="data[field]" :options="statuses" optionLabel="label" optionValue="value"
+          <Select  disabled  v-model="data[field]" :options="statuses" optionLabel="label" optionValue="value"
             placeholder="Select a Status" fluid>
             <template #option="slotProps">
               <Tag :value="slotProps.option.label" :severity="getSeverity(slotProps.option.value)" />
