@@ -4,6 +4,7 @@ import { useUserStore } from '@/stores/usersStore';
 import type { InputUser, OutputUser } from '@/types/booksTypes';
 import usersService from "@/services/userServices";
 import { useToastService } from "@/composables/useToastService";
+import remapArray from "@/utils/remapArray";
 
 export default defineComponent({
     name:'usersTable',
@@ -13,7 +14,7 @@ export default defineComponent({
     const toastService = useToastService();
 
     const editingRows = ref([]);
-    const editLoading = ref(false)
+    const loadingState = ref(false)
 
     const deleteUserDialog = ref(false)
 
@@ -24,31 +25,20 @@ export default defineComponent({
     const users = reactive<OutputUser[]>([])
 
     onMounted(async () => {
-      const mappedArray: OutputUser[] = usersData.value.map(user => ({
-        name: user.displayName,
-        email: user.email,
-        uid: user.uid,
-        status: isActive(user.lastSignInTime)
-      }))  
-      users.splice(0, users.length, ...mappedArray); 
+      users.splice(0, users.length, ...remapArray(usersData.value)); 
     })
 
-    function isActive(date: Date) {
-        const today = new Date()
-        const twoMontAgo = new Date()
-        const lastSignIn = new Date(date)
-        twoMontAgo.setMonth(today.getMonth() - 2)
+    watch(usersData, (value) => {
+      users.splice(0, users.length, ...remapArray(value)); 
+    })
 
-        return lastSignIn >= twoMontAgo
-    }
-
-      const statuses = [
-        { label: 'Active', value: true },
-        { label: 'Inactive', value: false },
-      ]
+    const statuses = [
+      { label: 'Active', value: true },
+      { label: 'Inactive', value: false },
+    ]
 
     return {
-        users, editingRows, loading, error, toastService, statuses, deleteUserDialog, editLoading
+        users, editingRows, loading, error, toastService, statuses, deleteUserDialog, loadingState
     };
   },
   methods:{
@@ -62,6 +52,7 @@ export default defineComponent({
       }
     },
     async deleteUser(identifier: OutputUser){
+      this.loadingState = true
         try {
           const usersServiceDelete = new usersService(({
             userIdentifier: identifier.uid,
@@ -82,6 +73,7 @@ export default defineComponent({
           detail: `${response.text()}`,
           life: 3000
         });
+        this.loadingState = false
 
         } catch (error) {
           this.toastService.add({
@@ -90,11 +82,12 @@ export default defineComponent({
           detail: `${error}`,
           life: 3000
         });
+        this.loadingState = false
         }
     },
     async onRowEditSave(event: { newData: OutputUser; index: number; }){
       let { newData, index } = event;
-      this.editLoading = true
+      this.loadingState = true
       try {
         const userService = new usersService({
           userIdentifier: newData.uid,
@@ -120,7 +113,7 @@ export default defineComponent({
           life: 3000
         });
 
-        this.editLoading = false
+        this.loadingState = false
       } catch (error) {
         this.toastService.add({
           severity: 'error',
@@ -128,7 +121,7 @@ export default defineComponent({
           detail: `${error instanceof Error}`,
           life: 3000
         });
-        this.editLoading = false
+        this.loadingState = false
       }
      
       this.users[index] = newData;
@@ -139,7 +132,7 @@ export default defineComponent({
 
 <template>
   <Toast/>
-  <Dialog v-model:visible="editLoading" modal pt:root:class="!border-0 !bg-transparent !shadow-none z-10">
+  <Dialog v-model:visible="loadingState" modal pt:root:class="!border-0 !bg-transparent !shadow-none z-10">
     <template #container>
       <i class="pi pi-spin pi-spinner text-primary-400 z-20" style="font-size: 3rem"></i>
     </template>

@@ -2,6 +2,7 @@
 import { onMounted, computed, watch, reactive, defineComponent} from "vue";
 import { useUserStore } from "@/stores/usersStore";
 import type { InputUser, OutputUser } from "@/types/booksTypes";
+import remapArray from "@/utils/remapArray";
 
 export default defineComponent({
   name: "homeTable",
@@ -15,31 +16,15 @@ export default defineComponent({
 
     onMounted(async () => {
          await userStore.fetchUsersData()
+         const limitedArray = remapArray(usersData.value).slice(0, 4);
+         users.splice(0, users.length, ...limitedArray); 
     });
     
     watch(usersData, (value) => {
-      const arrayUsers = value 
-      const mappedArray: OutputUser[] = arrayUsers.map(user => ({
-        name: user.displayName,
-        email: user.email,
-        uid: user.uid,
-        status: isActive(user.lastSignInTime)
-      }))  
-
-      console.log('Array Mapeada', mappedArray);
-      const limitedArray = mappedArray.slice(0, 4);
+      const limitedArray = remapArray(value).slice(0, 4);
       users.splice(0, users.length, ...limitedArray); 
     })
-
-    function isActive(date: Date) {
-        const today = new Date()
-        const twoMontAgo = new Date()
-        const lastSignIn = new Date(date)
-        twoMontAgo.setMonth(today.getMonth() - 2)
-
-        return lastSignIn >= twoMontAgo
-    }
-
+    
     return {
         users, loading, error,
     };

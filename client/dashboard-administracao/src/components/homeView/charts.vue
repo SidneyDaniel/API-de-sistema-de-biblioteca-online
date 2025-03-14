@@ -1,16 +1,16 @@
 <script lang="ts">
 import { ref, onMounted, computed, watch, reactive, defineComponent } from "vue";
 import { useRegisterStore } from "@/stores/registeredBooks";
+import processYearSelection from "@/utils/selectYearUtil";
 
 export default defineComponent({
   name: "homeChart",
   setup() {
     const primeChart = ref()
-    // const chartData = reactive({});
-    // const chartOptions = ref();
     const dates = ref();
     const selectedCity = ref();
     const year = ref();
+
     const reactiveData: Array<number> = reactive([])
 
     const registerStore = useRegisterStore();
@@ -24,58 +24,24 @@ export default defineComponent({
 
     onMounted(async () => {
       await registerStore.fetchRegisBooks();
-      // chartData.value = setChartData();
-      // chartOptions.value = setChartOptions();
+
+      const yearSelection = processYearSelection(arrayYear.value)
+      selectedCity.value = [yearSelection.latestYear[yearSelection.latestYear.length - 1]]
     });
 
-    watch(register, (newValue) => {
-      console.log('Novo valor de listOfBooks:', newValue);
-    });
-
-  
-    console.log("Register book s : " , register);
-    console.debug(arrayMonth);
-    
-    console.log(selectedCity);
-    watch(selectedCity,(newVar)=>{
-      console.log(newVar);
-      
-    })
 
     watch([arrayYear, selectedCity], ([newValueYear, newValueCity]) => {
-      console.log("test - 1",newValueYear);
-      console.log("test - 2",newValueCity);
+      const yearSelection = processYearSelection(newValueYear, newValueCity)
 
-      const yearObject: Record<string,any> = newValueYear
-      const selectedYear: Object = newValueCity
-      const keys = Object.keys(yearObject)
-      const yearVal = Object.values( selectedYear ?? {})
-      console.log('V', yearObject[yearVal[0]]);
-      const yearArray= yearObject[yearVal[0]]
-      console.log('selkl', yearVal);
-
-      const selectOption = keys.map(key => {
-        return {name: key}
-      })
-
-      year.value = selectOption 
-      // reactiveData.push(yearArray)
-      reactiveData.splice(0, reactiveData.length, ...yearArray ?? []);
+      year.value = yearSelection.selectOption 
+      reactiveData.splice(0, reactiveData.length, ...yearSelection.yearArray ?? []);
     });
     
-    console.log('reactive', reactiveData);
 
     const chartKeys = ref(0);
 
-    const forceRender = () => {
-      chartKeys.value += 1;
-    };
-
-
     watch(reactiveData, (data)=>{
-      console.log('reatuve', data);  
       const chart = primeChart.value.chart
-      // chart.data.labels.push(/* NEW DATA LABEL */)
       const a = chart.data.datasets[0].data
       a.splice(0, a.length, ...data ?? []);
       chart.update()
@@ -96,17 +62,10 @@ export default defineComponent({
         labels: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
         datasets: [
           {
-            label: "First Dataset",
+            label: "Books Added",
             data: [0],
             fill: false,
-            borderColor: documentStyle.getPropertyValue("--p-cyan-500"),
-            tension: 0.4,
-          },
-          {
-            label: "Second Dataset",
-            data: [28, 48, 40, 19, 86, 27, 90],
-            fill: true,
-            borderColor: documentStyle.getPropertyValue("--p-gray-500"),
+            borderColor: documentStyle.getPropertyValue("--p-primary-color"),
             tension: 0.4,
           },
         ],
@@ -117,9 +76,7 @@ export default defineComponent({
         aspectRatio: 0.6,
         plugins: {
           legend: {
-            labels: {
-              color: textColor,
-            },
+            display: false,
           },
         },
         scales: {
@@ -141,7 +98,8 @@ export default defineComponent({
           },
         },
       },
-      selectedCity,chartKeys ,
+      selectedCity,
+      chartKeys,
       year,
       dates
     };
@@ -151,11 +109,11 @@ export default defineComponent({
 
 <template>
     <div style="border: 1px solid var(--p-content-border-color)" class="p-4 rounded-xl">
-      <div class="flex gap-3">
-        <Button label="Monthly" text raised size="small" class="w-20"/>
-        <Button label="Yearly" text raised size="small" class="w-20"/>
-        <DatePicker v-model="dates" showIcon selectionMode="range" :manualInput="false" />
-        <Select v-model="selectedCity" :options="year" optionLabel="name" placeholder="Select a Year" checkmark :highlightOnSelect="false" class="w-full md:w-56" />
+      <div class="flex justify-between px-7 gap-3">
+        <!-- <DatePicker v-model="dates" showIcon selectionMode="range" :manualInput="false" /> -->
+        <span class="text-primary font-semibold">Yearly Book Additions</span>
+        
+        <Select v-model="selectedCity" :options="year" optionLabel="name" placeholder="Select a Year" checkmark :highlightOnSelect="false" size="small" class="w-full md:w-56" />
       </div>
   
       <Chart :key="chartKeys"  ref="primeChart" type="line" :data="chartData" :options="chartOptions" class="h-[29rem]" />
