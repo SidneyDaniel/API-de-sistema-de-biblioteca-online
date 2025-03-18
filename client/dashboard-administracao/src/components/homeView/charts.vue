@@ -10,6 +10,7 @@ export default defineComponent({
     const dates = ref();
     const selectedCity = ref();
     const year = ref();
+    const currentYear = ref()
 
     const reactiveData: Array<number> = reactive([])
 
@@ -27,13 +28,18 @@ export default defineComponent({
 
       const yearSelection = processYearSelection(arrayYear.value)
       selectedCity.value = [yearSelection.latestYear[yearSelection.latestYear.length - 1]]
+      currentYear.value = await selectedCity.value[0]
+      // console.log(selectedCity.value);
+      
     });
 
 
     watch([arrayYear, selectedCity], ([newValueYear, newValueCity]) => {
       const yearSelection = processYearSelection(newValueYear, newValueCity)
+      
+      if (selectedCity.value && selectedCity.value.name) { currentYear.value = selectedCity.value.name }
 
-      year.value = yearSelection.selectOption 
+      year.value = yearSelection.selectOption            
       reactiveData.splice(0, reactiveData.length, ...yearSelection.yearArray ?? []);
     });
     
@@ -101,7 +107,8 @@ export default defineComponent({
       selectedCity,
       chartKeys,
       year,
-      dates
+      dates,
+      currentYear
     };
   },
 });
@@ -112,7 +119,7 @@ export default defineComponent({
       <div class="flex justify-between px-7 gap-3">
         <!-- <DatePicker v-model="dates" showIcon selectionMode="range" :manualInput="false" /> -->
         <span class="text-primary font-semibold">Yearly Book Additions</span>
-        
+        <Badge :value="currentYear" severity="primary" size="large"></Badge>
         <Select v-model="selectedCity" :options="year" optionLabel="name" placeholder="Select a Year" checkmark :highlightOnSelect="false" size="small" class="w-full md:w-56" />
       </div>
   
