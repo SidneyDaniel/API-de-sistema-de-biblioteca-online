@@ -62,14 +62,14 @@ app.use(PrimeVue, {
 async function verifyToken() {
     try {
       const authStore = useAuthStore();
-      await authStore.verifyAuthToken(); // Verifica se o cookie existe
+      await authStore.verifyAuthToken();
     } catch (error) {
       console.error('Erro ao verificar token:', error);
-      // Trate o erro conforme necessário
+      
     }
   }
   
-  // Verifique o token antes de criar a instância da aplicação
+
   verifyToken().then(() => {
     app.use(router).mount('#app');
   });

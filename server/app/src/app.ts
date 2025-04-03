@@ -18,6 +18,8 @@ export class SetupAplication {
     // this.setupAdminFirebase();
     this.setupExpress();
     this.setupRoutes();
+    this.setup404Handler(); 
+
   }
 
   
@@ -49,6 +51,15 @@ export class SetupAplication {
     this.app.get('/', (req, res) => {
       res.sendFile(path.join(rootPath, 'index.html'));
   });
+  }
+
+  private setup404Handler(): void {
+    this.app.use((req, res) => {
+      // res.status(404).json({ message: 'Página não encontrada' }); 
+      // res.redirect('/index.html');
+      const rootPath = path.join(__dirname, '../../../client/dashboard-administracao/dist'); 
+      res.status(404).sendFile(path.join(rootPath, 'index.html'));
+    });
   }
   
   // private setupAdminFirebase():void {

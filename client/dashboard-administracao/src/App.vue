@@ -13,11 +13,11 @@ const authStore = useAuthStore();
     <Toast/>
     <header>
         <nav>
-          <MenuView/>
+          <MenuView v-if="!$route.meta.hideMenu"/>
         </nav>
     </header>
 
-    <div class="w-[85vw] min-w-[20vw] max-w-[85vw] h-[99vh]">
+    <div :class="(!$route.meta.hideMenu ? 'w-[85vw] min-w-[20vw] max-w-[85vw] h-[99vh]' : 'w-full max-w-full h-[99vh]')">
       <RouterView />
     </div>
   </main>

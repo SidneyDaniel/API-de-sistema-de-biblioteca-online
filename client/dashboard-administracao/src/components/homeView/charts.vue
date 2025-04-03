@@ -2,6 +2,7 @@
 import { ref, onMounted, computed, watch, reactive, defineComponent } from "vue";
 import { useRegisterStore } from "@/stores/registeredBooks";
 import processYearSelection from "@/utils/selectYearUtil";
+import { onBeforeRouteUpdate } from "vue-router";
 
 export default defineComponent({
   name: "homeChart",
@@ -47,10 +48,12 @@ export default defineComponent({
     const chartKeys = ref(0);
 
     watch(reactiveData, (data)=>{
-      const chart = primeChart.value.chart
-      const a = chart.data.datasets[0].data
-      a.splice(0, a.length, ...data ?? []);
-      chart.update()
+      const chart = primeChart.value?.chart
+      if (chart) {
+        const a = chart.data.datasets[0].data
+        a.splice(0, a.length, ...data ?? []);
+        chart.update()
+      }
     })
 
     const documentStyle = getComputedStyle(document.documentElement);

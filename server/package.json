@@ -7,6 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "tsx app/src/server.ts",
     "start:dev": "tsx watch app/src/server.ts",
+    "start:debug": "tsx watch --inspect app/src/server.ts ",
     "start:build": "node app/dist/server.js",
     "build": "tsup app/src -d ./app/dist/js",
     "lint": "eslint .",
