@@ -8,7 +8,7 @@
     "start": "tsx app/src/server.ts",
     "start:dev": "tsx watch app/src/server.ts",
     "start:debug": "tsx watch --inspect app/src/server.ts ",
-    "start:build": "node app/dist/server.js",
+    "start:build": "node app/dist/js/server.js",
     "build": "tsup app/src -d ./app/dist/js",
     "lint": "eslint .",
     "lint-fix": "eslint --fix ."

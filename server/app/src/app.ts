@@ -75,7 +75,7 @@ export class SetupAplication {
 
   public start(): void {
     this.server = this.app.listen(this.port, () => {
-      console.log(`Server running on port http://localhost:${this.port}/`);
+      console.log('\x1b[1m\x1b[32m%s','Server running on port:','\x1b[4m',`http://localhost:${this.port}/`,'\x1b[0m');
     });
   }
 }

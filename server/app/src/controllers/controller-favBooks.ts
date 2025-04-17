@@ -3,7 +3,7 @@ import { Request, Response } from "express";
 import UserSession from "@src/services/getUid-service";
 import admin from 'firebase-admin';
 
-interface Livro {
+interface BookModel {
     name: string;
     author: string;
     publisher: string;
@@ -16,7 +16,7 @@ class FavBooks{
     async addBooksFavorite(req: Request, res: Response){
         const { bookInfo } = req.body;
         // console.log(bookInfo.name);
-        bookInfo.forEach((book: Livro) => {
+        bookInfo.forEach((book: BookModel) => {
           console.log(book.name);
         
           const userSession = new UserSession(req);
@@ -103,7 +103,7 @@ class FavBooks{
         .then(async (userRecord) => {
           
           db.collection('usuarios').doc(userRecord.uid).collection('livrosFavoritos').get().then((querySnapshot) => {
-            const ALLFAVBOOKS: Array<Livro> = [];
+            const ALLFAVBOOKS: Array<BookModel> = [];
       
             querySnapshot.forEach((doc) => {
                 const data = doc.data();

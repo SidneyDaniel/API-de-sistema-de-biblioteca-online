@@ -1,10 +1,10 @@
 import express from "express";
 import UserController from "@src/controllers/controler-user";
-import functionVerifiySession from "@src/midllewares/function-verifiy-session";
+import midlewareVerifySession from "@src/midllewares/midleware-verifiy-session";
 
 const router = express.Router()
 const editUserAmdmin = new UserController;
 
-router.put('/editarUsuarios', functionVerifiySession.verificarAdm, editUserAmdmin.editarUsuariosAdm)
+router.put('/editarUsuarios', midlewareVerifySession.verifyAdm, editUserAmdmin.editarUsuariosAdm)
 
 export default router;

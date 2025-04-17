@@ -1,10 +1,10 @@
 import express from "express";
 import UserController from "@src/controllers/controler-user";
-import functionVerifiySession from "@src/midllewares/function-verifiy-session";
+import midlewareVerifySession from "@src/midllewares/midleware-verifiy-session";
 
 const router = express.Router()
 const deleteUser = new UserController;
 
-router.delete('/deletarUsuarios', functionVerifiySession.verificarAdm, deleteUser.deletarUsuario)
+router.delete('/deletarUsuarios', midlewareVerifySession.verifyAdm, deleteUser.deletarUsuario)
 
 export default router;

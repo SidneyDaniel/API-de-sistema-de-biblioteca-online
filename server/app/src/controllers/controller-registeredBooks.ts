@@ -77,7 +77,7 @@ class ResgisteredController{
             booksByDay: booksByDay
         };
 
-        res.json(response);
+        res.status(200).json(response);
         console.log(response);
     };
 

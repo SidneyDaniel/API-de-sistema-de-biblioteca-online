@@ -1,10 +1,10 @@
 import express from "express";
 import BooksController from "@src/controllers/controller-books";
-import functionVerifiySession from "@src/midllewares/function-verifiy-session";
+import midlewareVerifySession from "@src/midllewares/midleware-verifiy-session";
 
 const router = express.Router()
 const createBooks = new BooksController;
 
-router.post('/addBook', functionVerifiySession.verificarAdm, createBooks.createBook)
+router.post('/addBook', midlewareVerifySession.verifyAdm, createBooks.createBook)
 
 export default router;

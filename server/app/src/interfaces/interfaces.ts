@@ -7,7 +7,11 @@ export interface collectionItem {
     accessCode: string;
 }
 
-export interface Livro {
+/**
+ * @description  Structure of a book stored in the database.
+ */
+
+export interface BookModel {
     name: string;
     author: string;
     publisher: string;

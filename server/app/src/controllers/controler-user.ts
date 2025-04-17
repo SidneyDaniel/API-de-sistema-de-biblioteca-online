@@ -7,17 +7,20 @@ class UserController {
   async dadosUsuario(req: Request, res: Response) {
     const userSession = new UserSession(req);
 
-    userSession.getUserInfo().then(async (userInfo) => {
+    try {
+      const userInfo = await userSession.getUserInfo()
+      
+      if (!userInfo) { throw new Error}
+
       const photo = userInfo.photoURL;
       const displayNames = userInfo.displayName;
       const email = userInfo.email;
 
-      console.log(`O nome de exibição do usuário é: ${displayNames}`);
-      res.json({ photoURL: photo, displayName: displayNames, email: email })
-    })
-      .catch(error => {
-        console.error('Erro ao recuperar as informações do usuário:', error);
-      });
+      res.status(200).json({ photoURL: photo, displayName: displayNames, email: email })
+    } catch (error) {
+      console.warn('Erro ao recuperar as informações do usuário:', error);
+      res.status(500).json({error})
+    }
   }
 
   async listarUsarios(req: Request, res: Response) {
@@ -25,56 +28,76 @@ class UserController {
 
     const listAllUsers = async (nextPageToken?: string) => {
       // List batch of users, 1000 at a time.
-      await admin.auth()
-        .listUsers(1000, nextPageToken)
-        .then((listUsersResult) => {
-          // console.log(listUsersResult);
+      
+      try {
+        const listUsersResult = await admin.auth().listUsers(1000, nextPageToken)
+        
+        const users = listUsersResult.users.map((user) => ({
+          uid: user.uid,
+          displayName: user.displayName,
+          email: user.email,
+          emailVerified: user.emailVerified,
+          creationTime: user.metadata.creationTime,
+          lastSignInTime: user.metadata.lastSignInTime,
+          tokensValidAfterTime: user.tokensValidAfterTime,
+          disabled: user.disabled,
+        }));
+        
+        allUsers = allUsers.concat(users);
+        
+        console.log(users);
+        
+        if (listUsersResult.pageToken) { await listAllUsers(listUsersResult.pageToken); } 
+      } catch (error) {
+        console.error('Error listing users:', error);
+        throw error
+      }
+      
+      // await admin.auth()
+      //   .listUsers(1000, nextPageToken)
+      //   .then((listUsersResult) => {
+      //     // console.log(listUsersResult);
           
-          const users = listUsersResult.users.map((user) => ({
-            uid: user.uid,
-            displayName: user.displayName,
-            email: user.email,
-            emailVerified: user.emailVerified,
-            creationTime: user.metadata.creationTime,
-            lastSignInTime: user.metadata.lastSignInTime,
-            tokensValidAfterTime: user.tokensValidAfterTime,
-            disabled: user.disabled,
-          }));
-          allUsers = allUsers.concat(users);
-          console.log(users);
+      //     const users = listUsersResult.users.map((user) => ({
+      //       uid: user.uid,
+      //       displayName: user.displayName,
+      //       email: user.email,
+      //       emailVerified: user.emailVerified,
+      //       creationTime: user.metadata.creationTime,
+      //       lastSignInTime: user.metadata.lastSignInTime,
+      //       tokensValidAfterTime: user.tokensValidAfterTime,
+      //       disabled: user.disabled,
+      //     }));
+      //     allUsers = allUsers.concat(users);
+      //     console.log(users);
           
-          if (listUsersResult.pageToken) {
-            listAllUsers(listUsersResult.pageToken);
-          } else {
-            res.json({ users: allUsers });
-          }
-        })
-        .catch((error) => {
-          console.log('Error listing users:', error);
-          res.status(error);;
-          res.json(error.message);
-        });
+      //     if (listUsersResult.pageToken) {
+      //       listAllUsers(listUsersResult.pageToken);
+      //     } else {
+      //       res.json({ users: allUsers });
+      //     }
+      //   })
+      //   .catch((error) => {
+      //     console.log('Error listing users:', error);
+      //     res.status(error);;
+      //     res.json(error.message);
+      //   });
     };
-    // Start listing users from the beginning, 1000 at a time.
-    await listAllUsers();
+
+    try {
+      // Start listing users from the beginning, 1000 at a time.
+      await listAllUsers();
+      res.status(200).json({ users: allUsers });
+    } catch (error) {
+      res.status(500).json({ message: (error as Error).message, error });
+    }
+    
   }
 
   async editarUsuariosAdm(req: Request, res: Response) {
     const { newUserName, newUserEmail, userIdentifier } = req.body;
 
     try {
-      // const getUIDentifier = async (nextPageToken?: string): Promise<UidIdentifier> => {
-      //   const getUser= (await admin.auth().listUsers(1000, nextPageToken))
-      //     .users
-      //     .find(user => user.displayName === currentName)
-
-      //   if (!getUser) {
-      //     throw new Error(`User with displayName "${currentName}" not found.`)
-      //   }
-
-      //   return {uid: getUser?.uid}
-      // } 
-
       const getUserName = async (nextPageToken?: string) => {
         const getUser = (await admin.auth().listUsers(1000, nextPageToken))
           .users

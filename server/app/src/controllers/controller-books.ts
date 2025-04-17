@@ -3,7 +3,7 @@ import { Request, Response } from "express";
 import admin from 'firebase-admin';
 
 
-interface Livro {
+interface BookModel {
     name: string;
     author: string;
     publisher: string;
@@ -13,11 +13,10 @@ interface Livro {
     bookDataCreation: Date;
 }
 
-
-class BooksController {
+class BooksController { 
    async readBook(req: Request , res: Response){
         db.collection("tarefas").get().then((querySnapshot) => {
-          const ALLBOOKS: Array<Livro> = [];
+          const ALLBOOKS: Array<BookModel> = [];
       
           querySnapshot.forEach((doc) => {
               const data = doc.data();
@@ -38,7 +37,7 @@ class BooksController {
           })
           console.log(ALLBOOKS);
           
-          res.json({ALLBOOKS})
+          res.status(200).json({ALLBOOKS})
         });
       
     }
@@ -47,13 +46,13 @@ class BooksController {
         const { bookName, bookAuthor, bookPublisher, numberOfPages, readLink, bookCover } = req.body;
   
         db.collection('tarefas').add({
-        bookName: bookName,
-        bookAuthor: bookAuthor,
-        bookPublisher: bookPublisher,
-        numberOfPages: numberOfPages,
-        readLink: readLink,
-        bookCover: bookCover,
-        bookDataCreation: admin.firestore.FieldValue.serverTimestamp()
+            bookName: bookName,
+            bookAuthor: bookAuthor,
+            bookPublisher: bookPublisher,
+            numberOfPages: numberOfPages,
+            readLink: readLink,
+            bookCover: bookCover,
+            bookDataCreation: admin.firestore.FieldValue.serverTimestamp()
         })
         .then((docRef) => {
         console.log("Document written with ID: ", docRef.id);
@@ -68,57 +67,65 @@ class BooksController {
     async removeBook(req: Request, res: Response){
         const { title } = req.body;
         console.log(title);
-        db.collection("tarefas").where("bookName", "==", title).get().then((querySnapshot) => {
-          // Verificando se algum documento foi encontrado
-          if (!querySnapshot.empty) {
-              // Obtendo o ID do primeiro documento encontrado
-              const docId = querySnapshot.docs[0].id;
-              console.log("Document ID:", docId);
-              
-              // Excluir documento com base em seu id(docId) do banco de dados
-      
-              db.collection("tarefas").doc(docId).delete().then(() => {
-                  console.log("Document successfully deleted!");
-                  res.json("Document successfully deleted: RESPOSTA SERVIDOR!")
-              }).catch((error) => {
-                  console.error("Error removing document: ", error);
-                  
-              });
-      
-          } else {
-              console.log("No documents found");
-          }
-        }).catch((error) => {
-          console.error("Error searching for document: ", error);
-        }); 
+
+        const collection = db.collection("tarefas")
+
+        try {
+            const querySnapshot = await collection.where("bookName", "==", title).get()
+
+            if (!querySnapshot.empty) {
+                const docId = querySnapshot.docs[0].id;
+                const remove = await db.collection("tarefas").doc(docId).delete()
+
+                if (!remove) { throw new Error }
+            
+                res.status(204).json({success: true,message:"Document successfully deleted"})
+            } else {
+                res.status(404).json({
+                    message: 'No documents found'
+                })
+            }
+
+        } catch (error) {
+            res.status(409).json({
+                success: false, 
+                message: (error as Error).message
+            })
+        }
     }
 
     async editBook(req: Request, res: Response){
         const { currentTitle, newBookName, newBookauthor, newBookPublisher, newBookPages, newReadLink, newBookCover } = req.body;
         console.log(currentTitle, newBookName, newBookauthor, newBookPublisher, newBookPages, newReadLink, newBookCover);
-        db.collection("tarefas").where("bookName", "==", currentTitle).get().then((querySnapshot) => {
-          if (!querySnapshot.empty) {
-              const docId = querySnapshot.docs[0].id;
-              db.collection("tarefas").doc(docId).update({
-                  bookName:      newBookName,
-                  bookAuthor:    newBookauthor,
-                  bookPublisher: newBookPublisher,
-                  numberOfPages: newBookPages,
-                  readLink: newReadLink,
-                  bookCover: newBookCover
-              }).then(() => {
-                  console.log("Document successfully updated!");
-                  res.json("Document successfully updated! EDITADO, SERVIDOR!")
-              }).catch((error) => {
-                  console.error("Error updating document: ", error);
-              });
-          } else {
-              console.log("No documents found");
-          }
-      }).catch((error) => {
-          console.error("Error searching for document: ", error);
-      });
-      
+
+        const database = db.collection("tarefas")
+
+        try {
+            const querySnapshot = await database.where("bookName", "==", currentTitle).get()
+            const docId = querySnapshot.docs[0].id;
+
+            const update = database.doc(docId).update({
+                bookName:      newBookName,
+                bookAuthor:    newBookauthor,
+                bookPublisher: newBookPublisher,
+                numberOfPages: newBookPages,
+                readLink: newReadLink,
+                bookCover: newBookCover
+            })
+
+            if (!update) { throw new Error }
+
+            res.status(200).json({
+                success: true,
+                message: "Document successfully updated."
+            })
+
+        } catch (error) {
+            res.status(409).json({
+                success: false, 
+                message: (error as Error).message
+            })
+        }      
     }
 
     async deleteBooksBatch(req: Request, res: Response){
@@ -149,9 +156,10 @@ class BooksController {
         try {
             await Promise.all(deletionPromises);
             console.log("Documents successfully deleted!");
-            res.json("Documents successfully deleted: RESPOSTA SERVIDOR!");
+            res.status(204).json({success: true, message:"Documents successfully deleted."});
         } catch (error) {
             console.error("Error deleting documents:", error);
+            res.status(404).json({success: false, message: (error as Error).message})
         }
         
     }

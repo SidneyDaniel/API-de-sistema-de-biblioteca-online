@@ -2,64 +2,65 @@ import admin from 'firebase-admin';
 import { Response, Request } from 'express';
 import crypto from 'crypto';
 import UserSession from '@src/services/getUid-service';
-
+import { FirebaseError } from '@firebase/util';
 
 class SessionController {
     async login(req: Request, res: Response){
         const { idToken } = req.body;
 
         const expiresIn = 60 * 60 * 24 * 5 * 1000;
-        admin.auth().createSessionCookie(idToken, {expiresIn})
-        .then((sessionCookie) => {
-            const options = {maxAge: expiresIn, httpOnly: true, secure: true};
+        
+        try {
+          const sessionCookie = admin.auth().createSessionCookie(idToken, {expiresIn})
+          if (!sessionCookie) { throw new Error }
 
-            res.cookie('session', sessionCookie, options);
-            res.redirect('/Usuario/pagina_de_livros/página_livros.html');
-        }).catch(error => {
-            console.error(error);
-            res.json({ error: error.message });
-            
-        })
+          const options = {maxAge: expiresIn, httpOnly: true, secure: true};
+
+          res.cookie('session', sessionCookie, options);
+          res.redirect('/Usuario/pagina_de_livros/página_livros.html');
+        } catch (error) {
+          console.error(error);
+          res.json({ error: (error as Error).message });
+        }
     }
 
     async loginAdm(req: Request, res: Response){
         const { idToken } = req.body;
         
         const expiresIn = 60 * 60 * 24 * 5 * 1000; 
-        admin.auth().createSessionCookie(idToken, {expiresIn})
-            .then((sessionCookie) => {
-            const options = {maxAge: expiresIn, httpOnly: true, secure: true};
-            res.cookie('session', sessionCookie, options);
-            res.redirect('/');
-            }).catch(error => {
-            console.error(error);
-            res.json({ error: error.message });
-            
-            });;
+        try {
+          const sessionCookie = await admin.auth().createSessionCookie(idToken, {expiresIn})
+          
+          if (!sessionCookie) { throw new Error }
+
+          const options = {maxAge: expiresIn, httpOnly: true, secure: true};
+          res.cookie('session', sessionCookie, options);
+          res.status(303).redirect('/');
+
+        } catch (error) {
+          console.error(error);
+          res.status(401).json({ error: (error as Error || FirebaseError).message });
+        }
     };
 
     async signOut(req: Request, res: Response){
         const cookieHeader = req.headers.cookie || '';
         const cookies = cookieHeader.split(';').map(cookie => cookie.trim());
-        // console.log(cookies);
         const sessionCookie = cookies.find(cookie => cookie.startsWith('session='));
-        // console.log(sessionCookie);
         const sessionValue = sessionCookie ? sessionCookie.split('=')[1] : '';
-        res.clearCookie('session');
-        admin.auth()
-          .verifySessionCookie(sessionValue)
-          .then((decodedClaims) => {
-            console.log(decodedClaims.sub);
-            decodedClaims.getIdToken(/*forceRefresh*/ true)
-            return admin.auth().revokeRefreshTokens(decodedClaims.sub);
-            
-          })
-          .then(() => {
-            return res.redirect('index.html');
-          })
-          .catch((error) => {
-            res.json({ error: error.message});
-          });
+        
+        try {
+          const decodedClaims = await admin.auth().verifySessionCookie(sessionValue)
+          
+          if (!decodedClaims) { throw new Error }
+                    
+          await admin.auth().revokeRefreshTokens(decodedClaims.sub);
+
+          res.clearCookie('session');
+          res.status(200).redirect('index.html')
+        } catch (error) {
+          res.status(501).json({ error: (error as Error).message})
+        }
     }
 
     async signUp(req: Request, res: Response){
@@ -140,8 +141,6 @@ class SessionController {
       const userSession = new UserSession(req);
       
       async function cookieExists(): Promise<boolean> {
-        // const cookies = document.cookie.split(';').map(cookie => cookie.trim());
-        // return cookies.some(cookie => cookie.startsWith('session='));
         const cookieHeader = req.headers.cookie || '';
         const cookies = cookieHeader.split(';').map(cookie => cookie.trim());
         return cookies.some(cookie => cookie.startsWith('session='));
@@ -151,31 +150,45 @@ class SessionController {
 
       if (verifyCookie) {  
         await userSession.getUserInfo().then(async (userInfo) => {
-          admin.auth().getUserByEmail(userInfo.email)
-          .then(userRecord => {
-            // Verificar se o usuário é um administrador
-            console.log(userRecord?.customClaims?.role || '');
+          try {
+            const userRecord = await admin.auth().getUserByEmail(userInfo.email)
+
             if (userRecord.customClaims && userRecord.customClaims.role === "admin") {
-              console.log('O usuário é um administrador');
-              // O usuário é um administrador, permitir acesso
-              res.status(200).json('Usuário auteticado');
+              console.log('The user is an Admin');
+              res.status(200).json('User Autenticated');
             } else {
-              console.log('O usuário não é um administrador');
-              // O usuário não é um administrador, redirecionar para a página de login
-              res.status(403).json('Usuário autenticado mas não é admin');
+              console.log('The user is not and admin.');
+              res.status(403).json('The user is logged, but it´s not and admin');
             }
-          })
-          .catch(error => {
-            console.error('Erro ao recuperar as informações do usuário:', error);
-          });
+
+          } catch (error) {
+            res.status(403).json((error as Error).message);
+          }
+          
+          
+          // admin.auth().getUserByEmail(userInfo.email)
+          // .then(userRecord => {
+          //   // Verificar se o usuário é um administrador
+          //   console.log(userRecord?.customClaims?.role || '');
+          //   if (userRecord.customClaims && userRecord.customClaims.role === "admin") {
+          //     console.log('O usuário é um administrador');
+          //     // O usuário é um administrador, permitir acesso
+          //     res.status(200).json('Usuário auteticado');
+          //   } else {
+          //     console.log('O usuário não é um administrador');
+          //     // O usuário não é um administrador, redirecionar para a página de login
+          //     res.status(403).json('Usuário autenticado mas não é admin');
+          //   }
+          // })
+          // .catch(error => {
+          //   console.error('Erro ao recuperar as informações do usuário:', error);
+          // });
         })
       }else{
-        console.log('Cookie não encontrado!!!');
-        res.status(401).json('Nem autenticado você está cai fora');
+        console.log('Cookie not found');
+        res.status(401).json('You are not logged in.');
       }
     }
-
-
 }
 
 export default SessionController;

@@ -9,53 +9,116 @@ class AccesCodesController {
     async getAccesCode(req: Request, res: Response){
         const userSession = new UserSession(req);
 
-        userSession.getUserInfo().then(async (userInfo) => { 
-          const adminAccesCode = db.collection('administradores').doc(userInfo.uid).collection('livrosAdm').doc('accessCode');          
+        try {
+          const userInfo = await userSession.getUserInfo()
+          const adminAccesCode = db.collection('administradores')
+                .doc(userInfo.uid)
+                .collection('livrosAdm')
+                .doc('accessCode');    
+
           const doc = await adminAccesCode.get();
           if (doc.exists) {
             const code = doc.data();
-            res.json({code});
+            res.status(200).json({
+                succees: true,
+                message: 'Access code retrieved successfully.', 
+                code: code
+            });
           } else {
-            console.log('No such document!');
+            console.warn('No such document!');
+            res.status(404).json({
+              success: false, 
+              message: 'Access code not found.' 
+            });
           }
-          
-        }).catch(error => {
+        } catch (error) {
           console.error('Erro ao recuperar as informações do usuário:', error);
-        });
+          res.status(500).json({ 
+            success: false, 
+            message: (error as Error).message || error 
+          });
+        }
+
+        // userSession.getUserInfo().then(async (userInfo) => { 
+        //   const adminAccesCode = db.collection('administradores')
+        //         .doc(userInfo.uid)
+        //         .collection('livrosAdm')
+        //         .doc('accessCode');    
+
+        //   const doc = await adminAccesCode.get();
+        //   if (doc.exists) {
+        //     const code = doc.data();
+        //     res.status(200).json({succees:true, message: 'Access code retrieved successfully.', code: code});
+        //   } else {
+        //     console.warn('No such document!');
+        //     res.status(404).json({success: false, message: 'Access code not found.' });
+        //   }
+          
+        // }).catch(error => {
+        //   console.error('Erro ao recuperar as informações do usuário:', error);
+        //   res.status(500).json({ succces: false, message: error });
+        // });
     }
 
     async getClassCode(req: Request, res: Response) {
         const { accessCode } = req.body;
         // console.log(accessCode);
-        findCollectionByAccessCode(accessCode).then((docNameId) => {
-            console.log(accessCode);
-            console.log(docNameId);
+        // findCollectionByAccessCode(accessCode).then((docNameId) => {
+        //     console.log(accessCode);
+        //     console.log(docNameId);
 
-            getUIDFromSession(req).then(async (uid: string) => { 
-              const adminAccesCode = db.collection('usuarios').doc(uid).collection('turmas').doc('turma');
+        //     getUIDFromSession(req).then(async (uid: string) => { 
+        //       const adminAccesCode = db.collection('usuarios').doc(uid).collection('turmas').doc('turma');
 
-              const doc = await adminAccesCode.get();
+        //       const doc = await adminAccesCode.get();
 
-              const processorLenght = new DocumentProcessor(doc)
+        //       const processorLenght = new DocumentProcessor(doc)
 
-              const lenght = ` codigoTurma.${processorLenght.getLength()}`
-              console.log(processorLenght);
-              const data = {
-                  [lenght.trim()]: docNameId
-              };
+        //       const lenght = ` codigoTurma.${processorLenght.getLength()}`
+        //       console.log(processorLenght);
+        //       const data = {
+        //           [lenght.trim()]: docNameId
+        //       };
 
-              await adminAccesCode.update(data);
-              // await adminAccesCode.set(data, { merge: true });
+        //       await adminAccesCode.update(data);
+        //       // await adminAccesCode.set(data, { merge: true });
 
-              console.log('Documento adicionado com sucesso!');
+        //       console.log('Documento adicionado com sucesso!');
 
 
-            }).catch(error => {
-              console.error('Erro ao recuperar as informações do usuário:', error);
-            });
+        //     }).catch(error => {
+        //       console.error('Erro ao recuperar as informações do usuário:', error);
+        //     });
             
-            res.json({ docNameId });
-        })
+        //     res.json({ docNameId });
+        // })
+
+        try {
+          const docNameId = await findCollectionByAccessCode(accessCode)
+          const UId =  await getUIDFromSession(req)
+
+          const adminAccesCode = db.collection('usuarios')
+                                .doc(UId)
+                                .collection('turmas')
+                                .doc('turma');
+
+          const doc = await adminAccesCode.get();
+          const processorLenght = new DocumentProcessor(doc)
+
+          const lenght = ` codigoTurma.${processorLenght.getLength()}`
+          const data = { [lenght.trim()]: docNameId };
+
+          await adminAccesCode.update(data);
+
+          res.status(200).json({
+            success: true,
+            docNameId: docNameId
+          })
+
+        } catch (error) {
+          console.log(error);
+          res.status(500).json({error})
+        }
 
     }
 
