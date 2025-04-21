@@ -15,53 +15,49 @@ interface BookModel {
 
 class BooksController { 
    async readBook(req: Request , res: Response){
-        db.collection("tarefas").get().then((querySnapshot) => {
-          const ALLBOOKS: Array<BookModel> = [];
-      
-          querySnapshot.forEach((doc) => {
-              const data = doc.data();
-      
-              const book = {
-                  name: data.bookName,
-                  author: data.bookAuthor,
-                  publisher: data.bookPublisher,
-                  pages: data.numberOfPages,
-                  cover: data.bookCover,
-                  readLink: data.readLink,
-                  bookDataCreation: data.bookDataCreation,
-                  bookUpdateDate: data.bookUpdateDate
-              };
-      
-              ALLBOOKS.push(book);
-              
-          })
-          console.log(ALLBOOKS);
-          
-          res.status(200).json({ALLBOOKS})
-        });
-      
+        try {  
+            const querySnapshot = await db.collection("tarefas").get()
+
+            const ALLBOOKS: BookModel[] = querySnapshot.docs.map((doc) => {
+                const data = doc.data();
+                return {
+                    name: data.bookName,
+                    author: data.bookAuthor,
+                    publisher: data.bookPublisher,
+                    pages: data.numberOfPages,
+                    cover: data.bookCover,
+                    readLink: data.readLink,
+                    bookDataCreation: data.bookDataCreation,
+                    bookUpdateDate: data.bookUpdateDate
+                };
+            })
+            console.log(ALLBOOKS);
+            res.status(200).json({ ALLBOOKS })
+        } catch (error) {
+            res.status(500).json({message: `Error reading the documents: ${(error as Error).message}`})
+        }
     }
 
     async createBook(req: Request, res: Response){
         const { bookName, bookAuthor, bookPublisher, numberOfPages, readLink, bookCover } = req.body;
-  
-        db.collection('tarefas').add({
-            bookName: bookName,
-            bookAuthor: bookAuthor,
-            bookPublisher: bookPublisher,
-            numberOfPages: numberOfPages,
-            readLink: readLink,
-            bookCover: bookCover,
-            bookDataCreation: admin.firestore.FieldValue.serverTimestamp()
-        })
-        .then((docRef) => {
-        console.log("Document written with ID: ", docRef.id);
-        res.status(200).json({ message: "Document written with ID: " + docRef.id });
-        })
-        .catch((error) => {
+        
+        try {
+            const docRef = await db.collection('tarefas').add({
+                bookName: bookName,
+                bookAuthor: bookAuthor,
+                bookPublisher: bookPublisher,
+                numberOfPages: numberOfPages,
+                readLink: readLink,
+                bookCover: bookCover,
+                bookDataCreation: admin.firestore.FieldValue.serverTimestamp()
+            })
+
+            console.log("Document written with ID: ", docRef.id);
+            res.status(201).json({ message: "Document written with ID: " + docRef.id });   
+        } catch (error) {
             console.error("Error adding document: ", error);
             res.status(500).json({ message: "Error adding document: " + error });
-        });
+        }
     }
 
     async removeBook(req: Request, res: Response){
@@ -163,8 +159,6 @@ class BooksController {
         }
         
     }
-
-
 };
 
 export default BooksController;
