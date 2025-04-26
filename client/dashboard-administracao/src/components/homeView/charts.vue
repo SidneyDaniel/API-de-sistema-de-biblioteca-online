@@ -2,7 +2,6 @@
 import { ref, onMounted, computed, watch, reactive, defineComponent } from "vue";
 import { useRegisterStore } from "@/stores/registeredBooks";
 import processYearSelection from "@/utils/selectYearUtil";
-import { onBeforeRouteUpdate } from "vue-router";
 
 export default defineComponent({
   name: "homeChart",
@@ -66,6 +65,7 @@ export default defineComponent({
     );
   
     return {
+      loading,
       primeChart,
       chartData:{
         labels: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
@@ -125,8 +125,9 @@ export default defineComponent({
         <Badge :value="currentYear" severity="primary" size="large"></Badge>
         <Select v-model="selectedCity" :options="year" optionLabel="name" placeholder="Select a Year" checkmark :highlightOnSelect="false" size="small" class="w-full md:w-56" />
       </div>
-  
-      <Chart :key="chartKeys"  ref="primeChart" type="line" :data="chartData" :options="chartOptions" class="h-[29rem]" />
+      
+      <Skeleton v-if="loading" width="100%" height="464px"></Skeleton>
+      <Chart v-if="!loading" :key="chartKeys"  ref="primeChart" type="line" :data="chartData" :options="chartOptions" class="h-[29rem]" />
     </div>
 </template>
 

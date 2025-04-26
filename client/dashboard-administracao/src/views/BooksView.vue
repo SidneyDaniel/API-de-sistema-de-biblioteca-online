@@ -23,9 +23,9 @@ type Book = {
 };
 
 export default {
-  name: "cards",
+  name: "BookCards",
   components:{
-    CardsBooks, SpeedDialMenu, SearchBar
+    CardsBooks, SpeedDialMenu
   },
   setup() {
     const bookStore = useBooksStore();

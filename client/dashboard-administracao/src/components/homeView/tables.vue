@@ -44,8 +44,8 @@ export default defineComponent({
 </script>
 
 <template>
-    <div class="flex flex-row gap-6 w-full max-w-fit">
-      <DataTable :value="users" :rows="4" tableStyle="min-width: 50rem">
+    <div class="flex flex-row gap-6 w-full h-full max-w-fit">
+      <DataTable :value="users" :rows="4" tableStyle="min-width: 50rem" :loading="loading">
             <template #header>
                 <div class="flex flex-wrap items-center justify-between gap-2">
                     <span class="text-xl font-bold">Users</span>

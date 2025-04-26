@@ -4,6 +4,8 @@ import { useBooksStore } from "@/stores/books";
 import { useUserStore } from "@/stores/usersStore";
 
 import type { Book, InputUser } from "@/types/booksTypes";
+import Book_Info from "../ui/custom/book_Info.vue";
+import Number_of from "../ui/custom/number_of.vue";
 
 export default defineComponent({
   name: "homeCards",
@@ -56,17 +58,12 @@ export default defineComponent({
         UsersLenght,
         MostRecentBook,
         MostRecentUpdatedBook,
+        loadingBooks,
+        loadingUsers
     };
   },
-  methods:{
-    formatDate(date: {_seconds: number, _nanoseconds: number} | undefined){
-        if (!date) { return 'Invalid date' }
-
-        const newDate = new Date(date._seconds * 1000)
-        const newTime = new Date(date._nanoseconds).getTime()
-        
-        return `${newDate.toUTCString()}`
-    }
+  components:{
+    Book_Info , Number_of
   }
 });
 </script>
@@ -75,72 +72,47 @@ export default defineComponent({
     <div class="flex flex-row gap-4 ">
         <section class="flex flex-col gap-4">
             <div class="flex flex-row justify-between gap-4">
-                <Card class="w-full min-w-40 max-w-md  overflow-hidden">
-                    <template #title>N° of registered books</template>
-                    <template #subtitle>Total number of books registered in the system</template>
-                    <template #content>
-                        <p class="m-0">
-                            <Knob v-model="BooksLenght" :strokeWidth="5" />
+                <Number_of 
+                :_cardTitle="'N° of registered books'"
+                :_cardSubtitle="'Total number of books registered in the system'"
+                :_numberOfloading="loadingBooks"
+                :_numberOfLenght="BooksLenght"
+                />
 
-                        </p>
-                    </template>
-                </Card>
-
-                <Card class="w-full min-w-40 max-w-md  overflow-hidden">
-                    <template #title>N° of users</template>
-                    <template #subtitle>Total number of users in the system</template>
-                    <template #content>
-                        <p class="m-0">
-                            <Knob v-model="UsersLenght" :strokeWidth="5" />
-
-                        </p>
-                    </template>
-                </Card>
+                <Number_of 
+                :_cardTitle="'N° of users'"
+                :_cardSubtitle="'Total number of users in the system'"
+                :_numberOfloading="loadingUsers"
+                :_numberOfLenght="UsersLenght"
+                />
             </div>
+            
             <Tables />
         </section>
 
-        <Card class="w-full min-w-40 max-w-96 overflow-hidden">
-            <template #title>Last Book added</template>
-            <template #subtitle>Newest Addition to the Collection</template>
-            <template #content>
-                <section class="flex flex-col gap-8">
-                    <div class="mb-4 pt-12 flex flex-row justify-between">
-                        <div class="relative m-auto bg-primary p-10 rounded-full h-56 w-56 flex items-end justify-center">
-                            <img alt="book cover" :src="MostRecentBook?.cover" class="w-36 rounded-2xl"/>
-                        </div>
-                    </div>
-                    <div class="flex flex-col gap-2">
-                        <span >Title: {{ MostRecentBook?.name }}</span>
-                        <span class="text-xs">Author: {{ MostRecentBook?.author }}</span>
-                        <span class="text-xs">Pages: {{ MostRecentBook?.pages }}</span>
-                        <span class="text-xs">Publisher: {{ MostRecentBook?.publisher }}</span>    
-                    </div>
-                    <Tag :value="formatDate(MostRecentBook?.bookDataCreation)" class="w-full"></Tag>
-                </section>
-            </template>
-        </Card>
+        <Book_Info 
+            :_cardTitle="'Last Book added'"
+            :_cardSubtitle= "'Newest Addition to the Collection'"
+            :_loadingInfo="loadingBooks"
+            :_bookInfoCover="MostRecentBook?.cover"
+            :_bookInfoTitle="MostRecentBook?.name"
+            :_bookInfoAuthor="MostRecentBook?.author"
+            :_bookInfoPages="MostRecentBook?.pages"
+            :_bookInfoPublisher="MostRecentBook?.publisher"
+            :_bookInfoDataCreation="MostRecentBook?.bookDataCreation" 
+        />
 
-        <Card class="w-full min-w-40 max-w-96  overflow-hidden">
-            <template #title>Last Book Updated</template>
-            <template #subtitle>Most Recently Updated Book</template>
-            <template #content>
-                <section class="flex flex-col gap-8">
-                    <div class="mb-4 pt-12 flex flex-row justify-between">
-                        <div class="relative m-auto bg-primary p-10 rounded-full h-56 w-56 flex items-end justify-center">
-                            <img alt="book cover" :src="MostRecentUpdatedBook?.cover" class="w-36 rounded-2xl"/>
-                        </div>
-                    </div>
-                    <div class="flex flex-col gap-2">
-                        <span >Title: {{ MostRecentUpdatedBook?.name }}</span>
-                        <span class="text-xs">Author: {{ MostRecentUpdatedBook?.author }}</span>
-                        <span class="text-xs">Pages: {{ MostRecentUpdatedBook?.pages }}</span>
-                        <span class="text-xs">Publisher: {{ MostRecentUpdatedBook?.publisher }}</span>    
-                    </div>
-                    <Tag :value="formatDate(MostRecentUpdatedBook?.bookUpdateDate)" class="w-full"></Tag>
-                </section>
-            </template>
-        </Card>
+        <Book_Info 
+            :_cardTitle="'Last Book Updated'"
+            :_cardSubtitle= "'Most Recently Updated Book'"
+            :_loadingInfo="loadingBooks"
+            :_bookInfoCover="MostRecentUpdatedBook?.cover"
+            :_bookInfoTitle="MostRecentUpdatedBook?.name"
+            :_bookInfoAuthor="MostRecentUpdatedBook?.author"
+            :_bookInfoPages="MostRecentUpdatedBook?.pages"
+            :_bookInfoPublisher="MostRecentUpdatedBook?.publisher"
+            :_bookInfoDataCreation="MostRecentUpdatedBook?.bookUpdateDate" 
+        />
     </div>
 </template>
 
