@@ -3,12 +3,14 @@ import { defineComponent, ref, type PropType } from 'vue';
 import BatchDeleteOperation from '@/services/deleteMultiples';
 import EditPopover from './editPopover.vue';
 import type { Book } from '@/types/booksTypes';
+import { useToastService } from '@/composables/useToastService';
 
 export default defineComponent({
     name: "CardBook",
     data(){
         return{     
-            marked: ref()
+            marked: ref(),
+            toastService: useToastService()
         }
     },
     props: {
@@ -25,11 +27,17 @@ export default defineComponent({
     methods: {
         async deleteMultipleBooks(list: Array<string>){
             const loading = ref(false)
+            // const toastService = useToastService();
             try { 
                 loading.value = true
-                await new BatchDeleteOperation(list).deleteOperation()
+                const response = await new BatchDeleteOperation(list).deleteOperation()
+                if (!response.ok) { throw new Error() }
+                console.log(response);
+                
+                this.toastService.add({ severity: 'success', summary: 'Sucesso', detail: "Books deleted successfully.", life: 3000 });
             } catch (error) {
                 console.log(error);
+                this.toastService.add({ severity: 'error', summary: 'Erro', detail: `${error}`, life: 3000 });
                 loading.value = false
                 return error
             }finally {  
@@ -48,6 +56,7 @@ export default defineComponent({
 });
 </script>
 <template>
+    <Toast/>
     <div class="custom_grid_for_books_list">
         <Card class="w-full min-w-40 max-w-72 overflow-hidden relative" v-for="books in book" :key="books.name">
             <template #header>
@@ -88,5 +97,6 @@ export default defineComponent({
     grid-auto-rows: max-content;
     justify-content: center;
     width: 100%;
+    height: 95vh;
 }
 </style>

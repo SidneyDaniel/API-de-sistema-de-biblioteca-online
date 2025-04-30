@@ -199,16 +199,10 @@ export default {
 </script>
 
 <template>
-    <header>
-      <h1 class="text-primary text-xs">This is an Books page</h1>
-      <h1>{{ visibleCheckBox }}</h1>
-    </header>
-    <main>
-      <div class="flex flex-row gap-3 overflow-auto flex-wrap h-[88vh]">
+      <div class="flex flex-row gap-3 overflow-auto flex-wrap h-[95vh]">
         <CardsBooks :book="books" :visibleCheckBox="visibleCheckBox" v-on:toFalse="ViToFalse"/>
         <SpeedDialMenu @visibleCheckBox="handleVisibleCheckBox"/>
       </div>
-    </main>
 </template>
   
 <style>

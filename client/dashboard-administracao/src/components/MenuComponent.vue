@@ -1,8 +1,9 @@
 <script lang="ts">
 import { useRouter } from 'vue-router';
-import { defineComponent, ref } from 'vue';
+import { computed, defineComponent, onMounted, ref } from 'vue';
 import AuthService from '@/services/authService';
 import { useToastService } from '@/composables/useToastService';
+import { useCurrentUserStore } from '@/stores/currentUser';
 
 export default defineComponent({
   name: 'MenuComponent',
@@ -11,6 +12,8 @@ export default defineComponent({
     const router = useRouter()
     const toastService = useToastService();
     const confirm = ref(false)
+    const currentUser = useCurrentUserStore()
+    const userInfo = ref({email: '', name:''})
     
     const items = [
       {
@@ -69,8 +72,22 @@ export default defineComponent({
         separator: true
       }
     ]
-    
-    return { checked, router, items, confirm, toastService}
+    const authService = new AuthService({ email: '', password: '' })
+     
+    onMounted(async () => {
+      const currentUserLogged: {name: string, email: string} = await authService.currentUser()
+      // const { name, email } = await currentUser();
+      console.log(currentUserLogged);
+      
+      currentUser.setUserData( currentUserLogged.name, currentUserLogged.email)
+      
+      const currentUserInfo = computed(() => currentUser.currentUser)
+
+      userInfo.value.name = currentUserInfo.value.displayName || ''
+      userInfo.value.email = currentUserInfo.value.email || ''
+    })
+
+    return { checked, router, items, confirm, toastService, userInfo}
   },
   methods:{
     toggleColorScheme() {
@@ -149,10 +166,10 @@ export default defineComponent({
         <template #end>
           <div class="flex flex-col gap-7 p-1">
             <div class="flex flex-col items-center">
-              <Avatar image="https://primefaces.org/cdn/primevue/images/avatar/amyelsner.png" size="xlarge"
+              <Avatar :label="userInfo.name.trim().charAt(0)" size="xlarge"
                 shape="circle" />
               <span class="inline-flex flex-col items-start">
-                <span class="font-bold">Amy Elsner</span>
+                <span class="font-bold">{{userInfo.name}}</span>
                 <!-- <Tag icon="pi pi-user" value="emailAleatorio12@gmail.com" class="text-xs"></Tag>  -->
               </span>
             </div>

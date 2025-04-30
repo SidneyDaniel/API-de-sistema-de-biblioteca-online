@@ -4,6 +4,7 @@ import MenuView from '@/views/MenuView.vue'
 import LoginView from '@/views/LoginView.vue';
 import { useAuthStore } from './stores/auth';
 import Toast from 'primevue/toast';
+import NavigationUrl from './components/navigationUrl.vue';
 
 const authStore = useAuthStore();
 </script>
@@ -18,6 +19,7 @@ const authStore = useAuthStore();
     </header>
 
     <div :class="(!$route.meta.hideMenu ? 'w-[85vw] min-w-[20vw] max-w-[85vw] h-[99vh]' : 'w-full max-w-full h-[99vh]')">
+      <NavigationUrl/>
       <RouterView />
     </div>
   </main>

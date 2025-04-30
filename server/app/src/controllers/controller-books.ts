@@ -106,7 +106,8 @@ class BooksController {
                 bookPublisher: newBookPublisher,
                 numberOfPages: newBookPages,
                 readLink: newReadLink,
-                bookCover: newBookCover
+                bookCover: newBookCover,
+                bookUpdateDate: admin.firestore.FieldValue.serverTimestamp()
             })
 
             if (!update) { throw new Error }

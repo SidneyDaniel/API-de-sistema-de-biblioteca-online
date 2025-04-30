@@ -1,8 +1,9 @@
 import router from "@/router"
 import { useAuthStore } from '@/stores/auth';
 import { initializeApp } from "firebase/app";
-import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
+import { getAuth, onAuthStateChanged, signInWithEmailAndPassword } from 'firebase/auth';
 import { FirebaseError } from "firebase/app";
+import { ref } from "vue";
 
 class AuthService {
     private _email: string
@@ -84,6 +85,22 @@ class AuthService {
           } 
     }
  
+  public currentUser(): Promise<{ name: string, email: string }> {
+    const auth = getAuth(this.firebaseConfig());
+
+    return new Promise((resolve) => {
+      onAuthStateChanged(auth, (user) => {
+        if (user) {
+          resolve({
+            name: user.displayName ?? '',
+            email: user.email ?? ''
+          });
+        } else {
+          resolve({ name: '', email: '' });
+        }
+      });
+    });
+  }
 }
 
 export default AuthService;
