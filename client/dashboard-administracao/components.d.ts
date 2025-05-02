@@ -34,6 +34,7 @@ declare module 'vue' {
     Knob: typeof import('primevue/knob')['default']
     Login: typeof import('./src/components/Login.vue')['default']
     Menu: typeof import('primevue/menu')['default']
+    Menubar: typeof import('primevue/menubar')['default']
     MenuComponent: typeof import('./src/components/MenuComponent.vue')['default']
     NavigationUrl: typeof import('./src/components/navigationUrl.vue')['default']
     Number_of: typeof import('./src/components/ui/custom/number_of.vue')['default']
@@ -53,5 +54,8 @@ declare module 'vue' {
     ToggleButton: typeof import('primevue/togglebutton')['default']
     UsersTable: typeof import('./src/components/usersView/usersTable.vue')['default']
     WelcomeItem: typeof import('./src/components/WelcomeItem.vue')['default']
+  }
+  export interface ComponentCustomProperties {
+    Ripple: typeof import('primevue/ripple')['default']
   }
 }

@@ -28,7 +28,7 @@ export default defineComponent({
 </script>
 
 <template>
-    <Card class="w-full min-w-40 max-w-96  overflow-hidden">
+    <Card class="w-full min-w-40 max-w-96  overflow-hidden max-[1660px]:max-w-full">
             <template #title>{{ _cardTitle }}</template>
             <template #subtitle>{{ _cardSubtitle }}</template>
             <template #content>

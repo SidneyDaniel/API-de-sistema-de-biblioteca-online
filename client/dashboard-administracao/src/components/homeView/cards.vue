@@ -69,7 +69,7 @@ export default defineComponent({
 </script>
 
 <template>
-    <div class="flex flex-row gap-4 ">
+    <div class="flex flex-row gap-4 max-[1380px]:flex-col">
         <section class="flex flex-col gap-4">
             <div class="flex flex-row justify-between gap-4">
                 <Number_of 
@@ -90,6 +90,7 @@ export default defineComponent({
             <Tables />
         </section>
 
+        <section class="flex flex-flow gap-4 w-full max-[1660px]:flex-col max-[1380px]:flex-row">
         <Book_Info 
             :_cardTitle="'Last Book added'"
             :_cardSubtitle= "'Newest Addition to the Collection'"
@@ -113,6 +114,8 @@ export default defineComponent({
             :_bookInfoPublisher="MostRecentUpdatedBook?.publisher"
             :_bookInfoDataCreation="MostRecentUpdatedBook?.bookUpdateDate" 
         />
+    </section>
+
     </div>
 </template>
 

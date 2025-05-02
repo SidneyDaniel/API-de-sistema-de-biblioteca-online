@@ -10,10 +10,10 @@ const authStore = useAuthStore();
 </script>
 
 <template>
-  <main class="min-h-screen" v-if="authStore.isAuthenticated">
+  <main class="min-h-screen max-[1030px]:!flex-col" v-if="authStore.isAuthenticated">
     <Toast/>
-    <header>
-        <nav>
+    <header class="max-[1030px]:!p-0 max-[1030px]:w-[85vw]">
+        <nav class="max-[1030px]:!m-0">
           <MenuView v-if="!$route.meta.hideMenu"/>
         </nav>
     </header>
