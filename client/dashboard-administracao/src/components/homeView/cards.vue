@@ -71,9 +71,9 @@ export default defineComponent({
 <template>
     <div class="flex flex-row gap-4 max-[1380px]:flex-col">
         <section class="flex flex-col gap-4">
-            <div class="flex flex-row justify-between gap-4">
+            <div class="flex flex-row max-[400px]:flex-col justify-between gap-4">
                 <Number_of 
-                :_cardTitle="'N° of registered books'"
+                :_cardTitle="'N° of books'"
                 :_cardSubtitle="'Total number of books registered in the system'"
                 :_numberOfloading="loadingBooks"
                 :_numberOfLenght="BooksLenght"
@@ -90,7 +90,7 @@ export default defineComponent({
             <Tables />
         </section>
 
-        <section class="flex flex-flow gap-4 w-full max-[1660px]:flex-col max-[1380px]:flex-row">
+        <section class="flex flex-flow max-[530px]:flex-col gap-4 w-full max-[1660px]:flex-col max-[1380px]:flex-row">
         <Book_Info 
             :_cardTitle="'Last Book added'"
             :_cardSubtitle= "'Newest Addition to the Collection'"

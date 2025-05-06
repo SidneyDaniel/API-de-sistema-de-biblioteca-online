@@ -30,11 +30,11 @@ export default defineComponent({
 <template>
     <Card class="w-full min-w-40 max-w-96  overflow-hidden max-[1660px]:max-w-full">
             <template #title>{{ _cardTitle }}</template>
-            <template #subtitle>{{ _cardSubtitle }}</template>
+            <template #subtitle><h2 class="max-sm:hidden">{{ _cardSubtitle }}</h2></template>
             <template #content>
                 <section class="flex flex-col gap-8">
                     <div class="mb-4 pt-12 flex flex-row justify-between">
-                        <div class="relative m-auto bg-primary p-10 rounded-full h-56 w-56 flex items-end justify-center">
+                        <div class="relative m-auto bg-primary p-10 rounded-full h-56 w-56 max-sm:size-44 flex items-end justify-center">
                             <Skeleton v-if="_loadingInfo" width="36rem" height="219px" class="!rounded-xl"/>
                             <img v-if="!_loadingInfo" alt="book cover" :src="_bookInfoCover" class="w-36 rounded-2xl"/>
                         </div>

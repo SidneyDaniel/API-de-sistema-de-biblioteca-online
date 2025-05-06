@@ -147,7 +147,7 @@ export default defineComponent({
             style: state['d_editing'] && 'padding-top: 0.75rem; padding-bottom: 0.75rem'
           })
         }
-      }">
+      }" id="dt-responsive-table">
 
       <Column field="name" header="Name" style="width: 20%">
         <template #editor="{ data, field }">
@@ -210,5 +210,65 @@ export default defineComponent({
 
 .p-datatable-column-title{
     color: var(--p-primary-500);
+}
+
+@media (max-width: 1125px) {
+    .p-datatable{
+      border: none;
+    } 
+  
+    #dt-responsive-table table {
+        width: 100% !important;
+    }
+
+    #dt-responsive-table table tbody tr {
+      border: 1px solid var(--p-content-border-color);
+
+    }
+    
+    #dt-responsive-table table thead {
+        display: none !important; 
+    }
+
+    #dt-responsive-table table tbody tr td {
+      width: 100% !important;
+    }
+
+    #dt-responsive-table table tbody {
+        display: flex !important;
+        flex-direction: column !important;
+        width: 100% !important;
+        align-items: stretch !important;
+        min-height: auto !important; 
+    }
+
+    #dt-responsive-table table tbody tr {
+        border-radius: 8px !important;
+        margin-bottom: 1rem !important;
+        padding: 1rem !important;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+    }
+
+    #dt-responsive-table table tbody td {
+        margin: 0.5rem 0 !important;
+    }
+
+    #dt-responsive-table table tbody tr {
+        display: table-row !important;
+    }
+
+    #dt-responsive-table table tbody td {
+        display: flex !important;
+        margin: 0.5rem 0 !important;
+    }
+
+    #dt-responsive-table table tbody td > :nth-last-child(2),
+    #dt-responsive-table table tbody td > :last-child {
+      width: 100%;
+    }
+
+    #dt-responsive-table table tbody td button{
+      border-radius: 0.4rem;
+    }
 }
 </style>

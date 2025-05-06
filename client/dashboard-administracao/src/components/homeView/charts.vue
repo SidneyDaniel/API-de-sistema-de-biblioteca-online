@@ -13,7 +13,20 @@ export default defineComponent({
     const currentYear = ref()
 
     const reactiveData: Array<number> = reactive([])
+      
+    const screenWidth = ref(window.innerWidth)
+    const getScreenWidth = ref()
+      
+    window.addEventListener('resize', () => {
+        screenWidth.value = window.innerWidth;
+    });
 
+    watch(screenWidth,(watchScreenWidth) => {
+      getScreenWidth.value = watchScreenWidth
+      console.log(getScreenWidth.value);
+    })
+
+    
     const registerStore = useRegisterStore();
 
     const register = computed<Object>(() => registerStore.listOfBooks || {});
@@ -75,6 +88,9 @@ export default defineComponent({
             data: [0],
             fill: false,
             borderColor: documentStyle.getPropertyValue("--p-primary-color"),
+            backgroundColor: documentStyle.getPropertyValue('--p-primary-color'),
+            hoverBackgroundColor: documentStyle.getPropertyValue('--p-primary-600') ,
+            borderRadius: 5,
             tension: 0.4,
           },
         ],
@@ -98,6 +114,8 @@ export default defineComponent({
             },
           },
           y: {
+            min: 0,
+            max: 20,
             ticks: {
               color: textColorSecondary,
             },
@@ -111,7 +129,8 @@ export default defineComponent({
       chartKeys,
       year,
       dates,
-      currentYear
+      currentYear,
+      getScreenWidth
     };
   },
 });
@@ -121,13 +140,13 @@ export default defineComponent({
     <div style="border: 1px solid var(--p-content-border-color)" class="p-4 rounded-xl">
       <div class="flex justify-between px-7 gap-3">
         <!-- <DatePicker v-model="dates" showIcon selectionMode="range" :manualInput="false" /> -->
-        <span class="text-primary font-semibold">Yearly Book Additions</span>
-        <Badge :value="currentYear" severity="primary" size="large"></Badge>
+        <span class="text-primary font-semibold max-md:hidden">Yearly Book Additions</span>
+        <Badge :value="currentYear" class="!min-w-11 !rounded-md max-md:!h-[33px]" severity="primary" size="large"></Badge>
         <Select v-model="selectedCity" :options="year" optionLabel="name" placeholder="Select a Year" checkmark :highlightOnSelect="false" size="small" class="w-full md:w-56" />
       </div>
       
       <Skeleton v-if="loading" width="100%" height="464px"></Skeleton>
-      <Chart v-if="!loading" :key="chartKeys"  ref="primeChart" type="line" :data="chartData" :options="chartOptions" class="h-[29rem]" />
+      <Chart v-if="!loading" :key="chartKeys"  ref="primeChart" :type="getScreenWidth >= 555 ? 'line' : 'bar'" :data="chartData" :options="chartOptions" class="h-[29rem]" />
     </div>
 </template>
 

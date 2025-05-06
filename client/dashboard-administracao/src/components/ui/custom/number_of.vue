@@ -21,11 +21,11 @@ export default defineComponent({
 </script>
 
 <template>
-    <Card class="w-full min-w-40 max-w-md  overflow-hidden max-[1380px]:max-w-full">
+    <Card class="w-full min-w-40 max-w-md max-[410px]:items-center overflow-hidden max-[1380px]:max-w-full">
         <template #title>{{ _cardTitle }}</template>
-        <template #subtitle>{{ _cardSubtitle }}</template>
+        <template #subtitle><h2 class="max-[855px]:hidden">{{ _cardSubtitle }}</h2></template>
         <template #content>
-            <p class="m-0">
+            <p class="m-0 ">
                 <Skeleton v-if="_numberOfloading" shape="circle" width="100px" height="100px"></Skeleton>
                 <Knob v-if="!_numberOfloading" v-model="localNumberOfLength" :strokeWidth="5" />
             </p>
