@@ -5,6 +5,6 @@ import midlewareVerifySession from "@src/midllewares/midleware-verifiy-session";
 const router = express.Router()
 const removeBooksBatch = new BooksController;
 
-router.delete('/removeBookBatch', midlewareVerifySession.verifyAdm, removeBooksBatch.deleteBooksBatch)
+router.delete('/book/bulk', midlewareVerifySession.verifyAdm, removeBooksBatch.deleteBooksBatch)
 
 export default router;

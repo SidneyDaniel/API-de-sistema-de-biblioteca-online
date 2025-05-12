@@ -4,6 +4,6 @@ const router = express.Router();
 
 const regis = new ResgisteredController;
 
-router.post('/registeredBooks', regis.registeredBooks);
+router.post('/book/registered', regis.registeredBooks);
 
 export default router;

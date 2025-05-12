@@ -5,7 +5,7 @@ import midlewareVerifySession from "@src/midllewares/midleware-verifiy-session";
 const router = express.Router()
 const readBooks = new BooksController;
 
-router.get('/readBook', midlewareVerifySession.verificar, readBooks.readBook)
+router.get('/book', midlewareVerifySession.verificar, readBooks.readBook)
 
 export default router;
 

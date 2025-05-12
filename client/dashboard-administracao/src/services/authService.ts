@@ -72,7 +72,7 @@ class AuthService {
 
     public async logOut() {
         try {
-            const response = await fetch('/sessionLogout', { method: 'POST' })
+            const response = await fetch('/logout', { method: 'POST' })
 
             if (!response.ok) { throw new Error('Failed to logOut'); }
 

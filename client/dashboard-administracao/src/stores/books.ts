@@ -25,7 +25,7 @@ export const useBooksStore = defineStore('books', {
         this.loading = true
         this.error = '' as string
         try {
-            const response: Response = await fetch('/readBook')
+            const response: Response = await fetch('/book')
             
             if (!response.ok) {
                 throw new Error('Erro ao buscar dados')

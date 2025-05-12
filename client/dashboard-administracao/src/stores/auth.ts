@@ -7,30 +7,28 @@ export const useAuthStore = defineStore("auth", {
   actions: {
     async verifyAuthToken(){
         try {
-            const response = await fetch('/verifySession');
+            const response = await fetch('/verify-session');
             console.log(response);
             if (response.ok!) {
-              this.isAuthenticated = true; // Usuário autenticado
+              this.isAuthenticated = true; 
             } else {
-              this.isAuthenticated = false; // Usuário não autenticado
+              this.isAuthenticated = false; 
             }
           } catch (error) {
             console.error('Erro ao verificar autenticação:', error);
-            // Trate o erro conforme necessário (por exemplo, redirecione para uma página de erro)
           }
     },
     async setAuthToken() {
       try {
-        const response = await fetch('/verifySession');
+        const response = await fetch('/verify-session');
         console.log(response);
         if (response.ok!) {
-          this.isAuthenticated = true; // Usuário autenticado
+          this.isAuthenticated = true;
         } else {
-          this.isAuthenticated = false; // Usuário não autenticado
+          this.isAuthenticated = false; 
         }
       } catch (error) {
         console.error('Erro ao verificar autenticação:', error);
-        // Trate o erro conforme necessário (por exemplo, redirecione para uma página de erro)
       }
     },
     clearAuthToken() {

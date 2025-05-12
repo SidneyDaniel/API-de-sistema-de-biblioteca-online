@@ -5,6 +5,6 @@ import midlewareVerifySession from "@src/midllewares/midleware-verifiy-session";
 const router = express.Router()
 const getFavBook = new FavBooks;
 
-router.get('/readFavoritesBook', midlewareVerifySession.verificar, getFavBook.getBooksFavorite)
+router.get('/book/fav', midlewareVerifySession.verificar, getFavBook.getBooksFavorite)
 
 export default router;

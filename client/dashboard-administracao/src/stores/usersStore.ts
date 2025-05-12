@@ -14,7 +14,7 @@ export const useUserStore = defineStore('usersDataStore', {
         this.error = '' as string
         try {
 
-            const response: Response = await fetch('/listarUsuarios',{ method: 'GET' })
+            const response: Response = await fetch('/user-management/all',{ method: 'GET' })
             
             if (!response.ok) {
                 throw new Error('Erro ao buscar dados')

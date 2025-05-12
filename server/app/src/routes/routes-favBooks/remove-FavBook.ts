@@ -5,6 +5,6 @@ import midlewareVerifySession from "@src/midllewares/midleware-verifiy-session";
 const router = express.Router()
 const removeFavBook = new FavBooks;
 
-router.delete('/removeFavBook', midlewareVerifySession.verificar, removeFavBook.removeBooksFavorite)
+router.delete('/book/fav/del', midlewareVerifySession.verificar, removeFavBook.removeBooksFavorite)
 
 export default router;

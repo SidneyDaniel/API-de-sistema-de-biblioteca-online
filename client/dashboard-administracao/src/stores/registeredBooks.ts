@@ -33,7 +33,7 @@ export const useRegisterStore = defineStore('registeredBooks', {
             const dataFormatada = mes + '-' + dia + '-' + ano;
 
 
-            const response: Response = await fetch('/registeredBooks',{ 
+            const response: Response = await fetch('/book/registered',{ 
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json'},
                 body: JSON.stringify({ date: dataFormatada }), 

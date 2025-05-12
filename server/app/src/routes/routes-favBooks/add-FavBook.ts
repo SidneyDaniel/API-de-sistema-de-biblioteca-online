@@ -5,6 +5,6 @@ import midlewareVerifySession from "@src/midllewares/midleware-verifiy-session";
 const router = express.Router()
 const addFavBook = new FavBooks;
 
-router.post('/addBooksFavorites', midlewareVerifySession.verificar, addFavBook.addBooksFavorite)
+router.post('/book/fav/add', midlewareVerifySession.verificar, addFavBook.addBooksFavorite)
 
 export default router;

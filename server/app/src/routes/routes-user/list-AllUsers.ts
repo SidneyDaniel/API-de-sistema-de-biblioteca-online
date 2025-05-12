@@ -5,6 +5,6 @@ import midlewareVerifySession from "@src/midllewares/midleware-verifiy-session";
 const router = express.Router()
 const listUser = new UserController;
 
-router.get('/listarUsuarios', midlewareVerifySession.verifyAdm, listUser.listarUsarios)
+router.get('/user-management/all', midlewareVerifySession.verifyAdm, listUser.listUsers)
 
 export default router;

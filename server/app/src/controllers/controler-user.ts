@@ -4,7 +4,7 @@ import { Request, Response } from "express";
 import { UidIdentifier } from 'firebase-admin/lib/auth/identifier';
 
 class UserController { 
-  async dadosUsuario(req: Request, res: Response) {
+  async userData(req: Request, res: Response) {
     const userSession = new UserSession(req);
 
     try {
@@ -23,7 +23,7 @@ class UserController {
     }
   }
 
-  async listarUsarios(req: Request, res: Response) {
+  async listUsers(req: Request, res: Response) {
     let allUsers: Array<object> = [];
 
     const listAllUsers = async (nextPageToken?: string) => {
@@ -94,7 +94,7 @@ class UserController {
     
   }
 
-  async editarUsuariosAdm(req: Request, res: Response) {
+  async editUsersAdm(req: Request, res: Response) {
     const { newUserName, newUserEmail, userIdentifier } = req.body;
 
     try {
@@ -147,7 +147,7 @@ class UserController {
     }
   }
 
-  async editarUsuario(req: Request, res: Response) {
+  async editUsers(req: Request, res: Response) {
     const userSession = new UserSession(req);
     const { newPhoto, newName, newEmail } = req.body;
 
@@ -175,7 +175,7 @@ class UserController {
     });
   }
 
-  async deletarUsuario(req: Request, res: Response) {
+  async deleteUsers(req: Request, res: Response) {
     const { userIdentifier } = req.body;
 
     try {

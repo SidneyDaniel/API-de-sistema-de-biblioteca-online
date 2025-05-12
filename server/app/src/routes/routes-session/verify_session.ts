@@ -4,6 +4,6 @@ import SessionController from '@src/controllers/controller-session';
 
 const session = new SessionController;
 
-router.get('/verifySession', session.verifySession);
+router.get('/verify-session', session.verifySession);
 
 export default router

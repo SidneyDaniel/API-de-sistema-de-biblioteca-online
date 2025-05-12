@@ -5,6 +5,6 @@ import midlewareVerifySession from "@src/midllewares/midleware-verifiy-session";
 const router = express.Router()
 const editBooks = new BooksController;
 
-router.put('/editBook', midlewareVerifySession.verifyAdm, editBooks.editBook)
+router.put('/book/edit', midlewareVerifySession.verifyAdm, editBooks.editBook)
 
 export default router;

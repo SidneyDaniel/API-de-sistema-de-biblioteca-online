@@ -20,6 +20,7 @@ declare module 'vue' {
     Column: typeof import('primevue/column')['default']
     DataTable: typeof import('primevue/datatable')['default']
     Dialog: typeof import('primevue/dialog')['default']
+    DialogMenu: typeof import('./src/components/menu/dialogMenu.vue')['default']
     Divider: typeof import('primevue/divider')['default']
     DynamicPhotoFrame: typeof import('./src/components/DynamicPhotoFrame.vue')['default']
     EditPopover: typeof import('./src/components/bookView/editPopover.vue')['default']
@@ -44,6 +45,7 @@ declare module 'vue' {
     RouterView: typeof import('vue-router')['RouterView']
     SearchBar: typeof import('./src/components/bookView/searchBar.vue')['default']
     Select: typeof import('primevue/select')['default']
+    SideBarMenu: typeof import('./src/components/menu/sideBarMenu.vue')['default']
     Skeleton: typeof import('primevue/skeleton')['default']
     SpeedDial: typeof import('primevue/speeddial')['default']
     SpeedDialMenu: typeof import('./src/components/bookView/speedDialMenu.vue')['default']
@@ -52,6 +54,7 @@ declare module 'vue' {
     TheWelcome: typeof import('./src/components/TheWelcome.vue')['default']
     Toast: typeof import('primevue/toast')['default']
     ToggleButton: typeof import('primevue/togglebutton')['default']
+    TopBarMenu: typeof import('./src/components/menu/topBarMenu.vue')['default']
     UsersTable: typeof import('./src/components/usersView/usersTable.vue')['default']
     WelcomeItem: typeof import('./src/components/WelcomeItem.vue')['default']
   }

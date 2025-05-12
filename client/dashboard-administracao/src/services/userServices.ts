@@ -14,7 +14,7 @@ class usersService {
 
     public async EditUsers() {
         try {
-            const response = await fetch('/editarUsuarios', { 
+            const response = await fetch('/user-management/adm/edit', { 
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ 
@@ -37,7 +37,7 @@ class usersService {
 
     public async deleteUser(){
         try {
-            const response = await fetch('/deletarUsuarios', { 
+            const response = await fetch('/user-management/del', { 
                 method: 'DELETE',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ 

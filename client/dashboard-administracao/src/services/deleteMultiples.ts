@@ -7,7 +7,7 @@ class BatchDeleteOperation {
 
     public async deleteOperation(){
         try {
-             const response = await fetch('removeBookBatch', {
+             const response = await fetch('book/bulk', {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json'

@@ -4,6 +4,6 @@ const router = express.Router();
 
 const regis = new ResgisteredController;
 
-router.get('/lastRegisteredBook', regis.lastRegisteredBook);
+router.get('/book/last', regis.lastRegisteredBook);
 
 export default router;
