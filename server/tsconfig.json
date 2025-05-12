@@ -1,0 +1,45 @@
+{
+    "compilerOptions": {
+        "target": "ESNext",
+        "module": "CommonJS",
+        "moduleResolution": "node",
+        "outDir": "app/dist/js",
+        "sourceMap": true,
+        "noImplicitAny": true,
+        "noEmitOnError": true,
+        "experimentalDecorators": true,
+        "strictFunctionTypes": true,
+        "noImplicitThis": true,
+        "resolveJsonModule": true,
+        "alwaysStrict": true,
+        "removeComments": true,
+        "noImplicitReturns": true,
+        "esModuleInterop": true,
+        "allowSyntheticDefaultImports": true,
+        "strict": true,
+        "paths": {
+            "@src/*": [
+                "app/src/*"
+            ],
+            "@modules/*": [
+                "app/src/app/modules/*"
+            ],
+            "@test/*": [
+                "app/test/*"
+            ]
+        },
+        "rootDirs": [
+            "app/src",
+            "app/test"
+        ],
+        "baseUrl": ".",
+    },
+    "include": [
+        "app/src/**/*.ts",
+        "app/test/**/*.ts"
+    ],
+    "exclude": [
+        "./node_modules/*",
+        "dist",
+    ]
+}

@@ -1,4 +1,6 @@
 /** @type {import('tailwindcss').Config} */
+import PrimeUI from 'tailwindcss-primeui';
+
 export default {
   content: [
     "./index.html",
@@ -9,6 +11,6 @@ export default {
     extend: {},
   },
   // eslint-disable-next-line no-undef
-  plugins: [require('tailwindcss-primeui')],
+  plugins: [PrimeUI],
 }
 

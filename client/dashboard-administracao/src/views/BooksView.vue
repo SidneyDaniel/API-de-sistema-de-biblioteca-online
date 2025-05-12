@@ -23,9 +23,9 @@ type Book = {
 };
 
 export default {
-  name: "cards",
+  name: "BookCards",
   components:{
-    CardsBooks, SpeedDialMenu, SearchBar
+    CardsBooks, SpeedDialMenu
   },
   setup() {
     const bookStore = useBooksStore();
@@ -199,19 +199,10 @@ export default {
 </script>
 
 <template>
-    <header>
-      <h1 class="text-primary text-xs">This is an Books page</h1>
-      <h1>{{ visibleCheckBox }}</h1>
-    </header>
-    <main>
-      <div class="flex justify-end w-full my-5">
-        <SearchBar :visible-check-box="visibleCheckBox"/>
-      </div>
-      <div class="flex flex-row gap-3 overflow-auto flex-wrap h-[88vh]">
+      <div class="flex flex-row gap-3 overflow-auto flex-wrap h-[95vh]">
         <CardsBooks :book="books" :visibleCheckBox="visibleCheckBox" v-on:toFalse="ViToFalse"/>
         <SpeedDialMenu @visibleCheckBox="handleVisibleCheckBox"/>
       </div>
-    </main>
 </template>
   
 <style>

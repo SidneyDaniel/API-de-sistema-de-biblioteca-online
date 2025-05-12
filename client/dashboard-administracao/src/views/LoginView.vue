@@ -5,7 +5,6 @@ import Login from '../components/Login.vue';
 
 <template>
     <div class="h-screen flex flex-col items-center justify-center gap-5">
-      <h1>Login</h1>
       <Login/>
     </div>
   </template>

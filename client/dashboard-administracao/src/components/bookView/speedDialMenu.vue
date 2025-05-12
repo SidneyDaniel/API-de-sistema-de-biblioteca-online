@@ -4,6 +4,7 @@ import CreateReadUpdateDelete from '@/services/CRUD';
 import toast from 'primevue/toast';
 import { useToastService } from '@/composables/useToastService';
 import { ref } from 'vue';
+import DynamicPhotoFrame from '../DynamicPhotoFrame.vue';
 const bookStore = useBooksStore();
 
 export default {
@@ -30,13 +31,6 @@ export default {
         const items = ref([
             {
                 label: 'Add',
-                icon: 'pi pi-pencil',
-                command: () => {
-                    toast.add({ severity: 'info', summary: 'Add', detail: 'Data Added', life: 3000 });
-                }
-            },
-            {
-                label: 'Update',
                 icon: 'pi pi-plus',
                 command: () => {
                     visible.value = true
@@ -123,18 +117,9 @@ export default {
                     <span class="font-bold whitespace-nowrap text-primary text-xl">Add book</span>
                 </div>
             </template>
-            <span class="text-surface-500 dark:text-surface-400 block mb-5">Add a new book in the collection</span>
-            <section class="flex flex-row gap-4">
+            <section class="flex flex-col gap-4">
                 <div class="flex flex-col gap-3 justify-evenly">
-                    <div class="w-fit min-h-full rounded-lg bg-primary-emphasis p-2">
-                        <!-- <Image v-model:src="cover" alt="Image" width="200" preview /> -->
-                        <div v-if="!cover || !isValidURL(cover) " class="flex flex-col justify-around items-center font-extralight w-60 min-h-full bg-primary-contrast rounded-lg">
-                            <h1>Publisher</h1>
-                            <h2>Title</h2>
-                            <h3>Author</h3>
-                        </div>
-                        <img v-else  :src="cover" alt="image" class="rounded-lg w-60 min-w-60 contain-size min-h-full" />
-                    </div> 
+                    <DynamicPhotoFrame :imageUrl="cover"/>
                 </div>
                 <div class="flex flex-col gap-2 w-full">
                     <div class="flex flex-col gap-2">

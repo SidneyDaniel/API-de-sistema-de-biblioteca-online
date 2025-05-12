@@ -1,27 +1,11 @@
 <script lang="ts">
-import { onMounted, computed, watch, reactive} from "vue";
+import { onMounted, computed, watch, reactive, defineComponent} from "vue";
 import { useUserStore } from "@/stores/usersStore";
+import type { InputUser, OutputUser } from "@/types/booksTypes";
+import remapArray from "@/utils/remapArray";
 
-interface InputUser extends Object {
-    creationTime: Date;
-    disabled: boolean;
-    displayName: string;
-    email: string;
-    emailVerified: boolean;
-    lastSignInTime: Date;
-    tokensValidAfterTime: Date;
-    uid: string;
-}
-
-interface OutputUser {
-  name: string;
-  email: string;
-  uid: string;
-  status: boolean;
-}
-
-export default {
-  name: "table",
+export default defineComponent({
+  name: "homeTable",
   setup() {
     const userStore = useUserStore()
     const usersData = computed<Array<InputUser>>(() => userStore.listOfUsers || []);
@@ -32,55 +16,36 @@ export default {
 
     onMounted(async () => {
          await userStore.fetchUsersData()
+         const limitedArray = remapArray(usersData.value).slice(0, 4);
+         users.splice(0, users.length, ...limitedArray); 
     });
     
     watch(usersData, (value) => {
-      const arrayUsers = value 
-      const mappedArray: OutputUser[] = arrayUsers.map(user => ({
-        name: user.displayName,
-        email: user.email,
-        uid: user.uid,
-        status: isActive(user.lastSignInTime)
-      }))  
-
-      console.log('Array Mapeada', mappedArray);
-      const limitedArray = mappedArray.slice(0, 4);
+      const limitedArray = remapArray(value).slice(0, 4);
       users.splice(0, users.length, ...limitedArray); 
     })
-
-    function isActive(date: Date) {
-        const today = new Date()
-        const twoMontAgo = new Date()
-        const lastSignIn = new Date(date)
-        twoMontAgo.setMonth(today.getMonth() - 2)
-        // console.log(twoMontAgo);
-        // console.log(today)
-        // console.log(lastSignIn);
-        
-        // console.log(lastSignIn >= twoMontAgo)
-        return lastSignIn >= twoMontAgo
-    }
-
-    const getSeverity = (status: boolean) => {
-    switch (status) {
-        case true:
-            return 'sucess';
-
-        case false:
-            return 'warn';
-    }
-}
-
+    
     return {
-        users, loading, error, getSeverity
+        users, loading, error,
     };
   },
-};
+  methods:{
+    getSeverity(status: boolean){
+      switch (status) {
+          case true:
+              return 'sucess';
+
+          case false:
+              return 'warn';
+      }
+    }
+  }
+});
 </script>
 
 <template>
-    <div class="flex flex-row gap-6 w-full max-w-fit">
-      <DataTable :value="users" :rows="4" tableStyle="min-width: 50rem">
+    <div class="flex flex-row gap-6 w-full h-full max-w-fit">
+      <DataTable :value="users" :rows="4"  class="!min-w-[50rem] max-[1380px]:!min-w-full max-[1380px]:!w-screen  " :loading="loading">
             <template #header>
                 <div class="flex flex-wrap items-center justify-between gap-2">
                     <span class="text-xl font-bold">Users</span>
@@ -107,10 +72,6 @@ export default {
 </template>
 
 <style>
-/* .p-datatable-column-title {
-    color: var(--p-primary-color);
-} */
-
 .p-datatable-header {
     color: var(--p-primary-color) !important;
 }

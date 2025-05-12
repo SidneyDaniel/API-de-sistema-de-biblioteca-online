@@ -1,7 +1,13 @@
+<script setup lang="ts">
+import UsersTable from '@/components/usersView/usersTable.vue';
+
+
+</script>
+
 <template>
-    <div class="about">
-      <h1>This is an Users page</h1>
-    </div>
+      <div class="flex flex-row gap-3 overflow-auto flex-wrap h-[88vh]">
+        <UsersTable/>
+      </div>
   </template>
   
   <style>

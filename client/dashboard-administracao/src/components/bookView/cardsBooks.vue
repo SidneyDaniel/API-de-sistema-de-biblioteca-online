@@ -1,30 +1,16 @@
 <script lang="ts">
-import { ref, type PropType } from 'vue';
+import { defineComponent, ref, type PropType } from 'vue';
 import BatchDeleteOperation from '@/services/deleteMultiples';
 import EditPopover from './editPopover.vue';
+import type { Book } from '@/types/booksTypes';
+import { useToastService } from '@/composables/useToastService';
 
-type Book = {
-  author: string;
-  bookDataCreation: {
-    _seconds: number;
-    _nanoseconds: number;
-  };
-  bookUpdateDate: {
-    _seconds: number;
-    _nanoseconds: number;
-  };
-  cover: string;
-  name: string;
-  pages: string;
-  publisher: string;
-  readLink: string;
-};
-
-export default {
+export default defineComponent({
     name: "CardBook",
     data(){
         return{     
-            marked: ref()
+            marked: ref(),
+            toastService: useToastService()
         }
     },
     props: {
@@ -40,16 +26,22 @@ export default {
     emits: ['toFalse'],
     methods: {
         async deleteMultipleBooks(list: Array<string>){
-            let loading = false
+            const loading = ref(false)
+            // const toastService = useToastService();
             try { 
-                loading = true
-                await new BatchDeleteOperation(list).deleteOperation()
+                loading.value = true
+                const response = await new BatchDeleteOperation(list).deleteOperation()
+                if (!response.ok) { throw new Error() }
+                console.log(response);
+                
+                this.toastService.add({ severity: 'success', summary: 'Sucesso', detail: "Books deleted successfully.", life: 3000 });
             } catch (error) {
                 console.log(error);
-                loading = false
+                this.toastService.add({ severity: 'error', summary: 'Erro', detail: `${error}`, life: 3000 });
+                loading.value = false
                 return error
             }finally {  
-                loading = false
+                loading.value = false
             } 
         }
     },
@@ -61,10 +53,10 @@ export default {
             console.log('Marked changed from', oldValue, 'to', newValue); 
         }
     }
-};
+});
 </script>
-<!-- Já sei como resolver essa bagunça, get rid of all of that Sidney, tira a responsabilidad do v-for de cima do bookView e passa para o componente filho no caso esse   -->
 <template>
+    <Toast/>
     <div class="custom_grid_for_books_list">
         <Card class="w-full min-w-40 max-w-72 overflow-hidden relative" v-for="books in book" :key="books.name">
             <template #header>
@@ -105,5 +97,6 @@ export default {
     grid-auto-rows: max-content;
     justify-content: center;
     width: 100%;
+    height: 95vh;
 }
 </style>

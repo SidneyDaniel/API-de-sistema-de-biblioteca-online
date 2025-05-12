@@ -23,7 +23,7 @@ class CreateReadUpdateDelete {
 
     public createBook() {
         try {
-            fetch('addBook', {
+            fetch('book/add', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -64,7 +64,7 @@ class CreateReadUpdateDelete {
 
     public editBook() {
         try {
-            fetch('editBook', {
+            fetch('book/edit', {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'
@@ -101,7 +101,7 @@ class CreateReadUpdateDelete {
 
     public deleteBook() {
         try {
-            fetch('removeBook', {
+            fetch('book/del', {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json'
