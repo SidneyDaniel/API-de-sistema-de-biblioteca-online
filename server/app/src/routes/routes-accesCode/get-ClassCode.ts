@@ -4,6 +4,6 @@ import AccesCodesController from '@src/controllers/controler-acessCodes';
 
 const getClassCodes = new AccesCodesController;
 
-router.post('/salasParticipadas', getClassCodes.getClassCode)
+router.post('/acess-code/class-code', getClassCodes.getClassCode)
 
 export default router;
