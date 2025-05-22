@@ -11,7 +11,11 @@
     "start:build": "node app/dist/js/server.js",
     "build": "tsup app/src -d ./app/dist/js",
     "lint": "eslint .",
-    "lint-fix": "eslint --fix ."
+    "lint-fix": "eslint --fix .",
+    "cy:open": "cypress open",
+    "cy:e2e": "npx cypress run",
+    "cy:routes": "npx cypress run --spec cypress/e2e/routes-test.cy.ts",
+    "cy:function": "npx cypress run --spec cypress/e2e/app_functional_flow.cy.ts"
   },
   "author": "Sidney D.",
   "license": "ISC",
@@ -26,6 +30,7 @@
   "devDependencies": {
     "@eslint/js": "^9.10.0",
     "@types/express-session": "^1.18.0",
+    "cypress": "^14.3.3",
     "globals": "^15.9.0",
     "tsup": "^8.2.4",
     "tsx": "^4.19.0",
