@@ -4,6 +4,6 @@ import AccesCodesController from '@src/controllers/controler-acessCodes';
 
 const getSavedClass = new AccesCodesController ;
 
-router.post('/salasSalvas', getSavedClass.getSavedClass);
+router.post('/acess-code/saved-class', getSavedClass.getSavedClass);
 
 export default router;
